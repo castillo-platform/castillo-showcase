@@ -33,28 +33,28 @@ window.CASTILLO_VIEWS = {
  "paper": [
   {
    "title": "Start",
-   "text": "Listet neue Post im Eingang mit Ablagevorschlag und meldet Preiserhöhungen, fehlende Rechnungen und auslaufende Garantien.",
+   "text": "Zeigt neue Post wie die Stromrechnung mit Ablagevorschlag und meldet, dass Acme Telecom 10 % teurer wurde und die Velo-Garantie am 5. Dezember endet.",
    "desktop": "shots/paper-desk-desktop.webp",
    "tablet": "shots/paper-desk-tablet.webp",
    "phone": "shots/paper-desk-phone.webp"
   },
   {
    "title": "Ablage",
-   "text": "Ordnet alle Dokumente nach Person und Bereich und findet sie über Suchen wie „Rechnungen über 100 dieses Jahr“.",
+   "text": "Ordnet alle Papiere nach Person und Bereich und findet sie über Suchen wie «Rechnungen über 100 dieses Jahr».",
    "desktop": "shots/paper-documents-desktop.webp",
    "tablet": "shots/paper-documents-tablet.webp",
    "phone": "shots/paper-documents-phone.webp"
   },
   {
    "title": "Dokument",
-   "text": "Zeigt die aus einer Versicherungspolice gelesenen Angaben wie Prämie, Vertragsnummer, Kündigungsfrist und Selbstbehalt.",
+   "text": "Zeigt die aus der Hausratpolice gelesenen Angaben wie Jahresprämie, Policennummer, Kündigungsfrist und den letzten Kündigungstag.",
    "desktop": "shots/paper-document-desktop.webp",
    "tablet": "shots/paper-document-tablet.webp",
    "phone": "shots/paper-document-phone.webp"
   },
   {
    "title": "Verträge",
-   "text": "Führt jeden Vertrag mit Kosten, Laufzeit und dem letzten Kündigungsdatum, rot markiert, wenn es in weniger als 30 Tagen fällt.",
+   "text": "Führt jeden Vertrag mit Kosten, Laufzeit und letztem Kündigungsdatum und markiert das Fitnessabo rot, weil die Frist in 3 Tagen abläuft.",
    "desktop": "shots/paper-contracts-desktop.webp",
    "tablet": "shots/paper-contracts-tablet.webp",
    "phone": "shots/paper-contracts-phone.webp"
