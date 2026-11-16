@@ -180,9 +180,10 @@
           ${V.some((v) => v.tablet) ? `<div class="dev tab" tabindex="0" role="button" aria-label="${esc(a.name)} auf dem iPad vergrössern"><div class="screen">${layer('tablet')}</div></div>` : ''}
           ${V.some((v) => v.phone) ? `<div class="dev ph" tabindex="0" role="button" aria-label="${esc(a.name)} auf dem iPhone vergrössern"><div class="screen">${layer('phone')}</div></div>` : ''}
         </div>
+        <p class="views-label"><b>${V.length} Sichten</b> · antippen zum Umschalten</p>
         <div class="views" role="tablist" aria-label="Sichten von ${esc(a.name)}">${V.map((v, k) => `
           <button type="button" role="tab" id="${esc(a.id)}-tab-${k}" aria-controls="${esc(a.id)}-panel" class="${k ? '' : 'on'}" data-v="${k}" aria-selected="${!k}" tabindex="${k ? -1 : 0}">
-            <span class="n">${String(k + 1).padStart(2, '0')}</span><b>${esc(v.title)}</b><i class="bar"></i>
+            <span class="vt">${(v.desktop || v.phone) ? `<img data-thumb="${esc(v.desktop || v.phone)}" alt="" decoding="async">` : ''}</span><span class="vl"><span class="n">${String(k + 1).padStart(2, '0')}</span><b>${esc(v.title)}</b></span><i class="bar"></i>
           </button>`).join('')}</div>
         <div class="caption" role="tabpanel" id="${esc(a.id)}-panel" aria-live="polite">${V.map((v, k) => `<p class="${k ? '' : 'on'}" data-v="${k}">${esc(v.text)}</p>`).join('')}</div>
       </div>`;
@@ -200,8 +201,14 @@
   // Explorer: the group's apps as tabs over one shared stage
   const explorer = (list) => `
       <div class="explorer reveal">
-        ${list.length > 1 ? `<div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i>${esc(a.name)}</button>`).join('')}</div>` : ''}
+        ${list.length > 1 ? `
+        <div class="ex-bar">
+          <p class="ex-label"><b>${list.length} Apps</b> in diesem Bereich · zum Wechseln antippen</p>
+          <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige App"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="Nächste App"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+        </div>
+        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
         <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `class="app${k ? '' : ' on'}`)).join('')}</div>
+        ${list.length > 1 ? `<div class="ex-foot"><button type="button" class="ex-next" data-step="1">Nächste App: <i></i><b></b><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>` : ''}
       </div>`;
   // Small sites: a tile with the first view's desktop shot
   const tileHTML = (t) => {
@@ -362,6 +369,7 @@
       // a device without a shot for this view keeps showing its last one
       const load = (k) => app.querySelectorAll(`img[data-v="${(k + tabs.length) % tabs.length}"][data-src]`).forEach((im) => { im.src = im.dataset.src; im.removeAttribute('data-src'); });
       load(at); load(at + 1);
+      app.querySelectorAll('img[data-thumb]').forEach((im) => { im.src = im.dataset.thumb; im.removeAttribute('data-thumb'); });
       app.querySelectorAll('.screen').forEach((sc) => {
         if (!sc.querySelector(`img[data-v="${at}"]`)) return;
         sc.querySelectorAll('img').forEach((im) => im.classList.toggle('on', Number(im.dataset.v) === at));
@@ -392,9 +400,29 @@
   const showApp = (ex, id) => {
     ex.querySelectorAll('.picker button').forEach((b) => { const on = b.dataset.app === id; b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on) b.parentElement.scrollTo({ left: b.offsetLeft - 20, behavior: still ? 'auto' : 'smooth' }); });
     ex.querySelectorAll('.panels > .app').forEach((a) => { const on = a.id === id; if (on === a.classList.contains('on')) return; a.classList.toggle('on', on); if (on) a.dispatchEvent(new Event('shown')); });
+    syncNav(ex);
+  };
+  const syncNav = (ex) => {
+    const btns = [...ex.querySelectorAll('.picker button')];
+    if (!btns.length) return;
+    const i = btns.findIndex((b) => b.classList.contains('on'));
+    $('.ex-count', ex).textContent = `${i + 1} / ${btns.length}`;
+    const nb = btns[(i + 1) % btns.length];
+    const next = $('.ex-next', ex);
+    next.style.setProperty('--c', nb.style.getPropertyValue('--c'));
+    $('i', next).innerHTML = nb.querySelector('i').innerHTML;
+    $('b', next).textContent = nb.querySelector('b').textContent;
   };
   document.querySelectorAll('.explorer').forEach((ex) => {
     const btns = [...ex.querySelectorAll('.picker button')];
+    if (!btns.length) return;
+    syncNav(ex);
+    ex.querySelectorAll('[data-step]').forEach((st) => st.addEventListener('click', () => {
+      const i = btns.findIndex((b) => b.classList.contains('on'));
+      const t = btns[(i + Number(st.dataset.step) + btns.length) % btns.length];
+      showApp(ex, t.dataset.app);
+      if (st.classList.contains('ex-next')) ex.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+    }));
     btns.forEach((b, j) => {
       b.tabIndex = j ? -1 : 0;
       b.addEventListener('click', () => showApp(ex, b.dataset.app));
@@ -452,7 +480,7 @@
     const pill = document.createElement('span');
     pill.className = 'pill';
     pk.prepend(pill);
-    const place = () => { const on = pk.querySelector('button.on'); if (on) { pill.style.width = `${on.offsetWidth}px`; pill.style.transform = `translateX(${on.offsetLeft}px)`; } };
+    const place = () => { const on = pk.querySelector('button.on'); if (on) { pill.style.width = `${on.offsetWidth}px`; pill.style.height = `${on.offsetHeight}px`; pill.style.top = `${on.offsetTop}px`; pill.style.transform = `translateX(${on.offsetLeft}px)`; } };
     new MutationObserver(place).observe(pk, { subtree: true, attributes: true, attributeFilter: ['class'] });
     addEventListener('resize', place);
     requestAnimationFrame(place);
