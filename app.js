@@ -72,8 +72,12 @@
   // Stars: a seeded sky, so it looks the same on every visit
   let seed = 7;
   const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-  $('#stars').innerHTML = Array.from({ length: 160 }, () => `<i style="left:${(rnd() * 100).toFixed(2)}%;top:${(rnd() * 100).toFixed(2)}%;--s:${(1 + rnd() * 1.8).toFixed(1)}px;--t:${(2.5 + rnd() * 4).toFixed(1)}s;--d:-${(rnd() * 6).toFixed(1)}s"></i>`).join('')
-    + [0, 3.1, 6.2].map((d, k) => `<b style="left:${12 + k * 27}%;top:${8 + k * 9}%;--d:${d}s"></b>`).join('');
+  // Clouds in three depths and a few birds; seeded, so the sky looks the same on every visit
+  const cloud = '<path d="M20 50a18 18 0 0 1 4-35 26 26 0 0 1 48-6 20 20 0 0 1 30 14 16 16 0 0 1-2 27z"/>';
+  $('#clouds').innerHTML = Array.from({ length: 9 }, (_, k) => {
+    const depth = k % 3;
+    return `<svg class="cloud" viewBox="0 0 120 56" style="--y:${(4 + rnd() * 34).toFixed(1)}%;--w:${[90, 150, 230][depth]}px;--o:${[0.55, 0.75, 0.95][depth]};--t:${[140, 95, 60][depth] + Math.round(rnd() * 30)}s;--d:-${Math.round(rnd() * 120)}s">${cloud}</svg>`;
+  }).join('') + Array.from({ length: 4 }, (_, k) => `<svg class="bird" viewBox="0 0 26 12" style="--y:${(12 + k * 7 + rnd() * 6).toFixed(1)}%;--t:${38 + k * 9}s;--d:-${(k * 11).toFixed(0)}s"><path d="M2 8q5-6 11 0q6-6 11 0"/></svg>`).join('');
 
   // The castle: a keep in the middle, one tower per app spreading out, lower towards the edges
   const W = 1600, G = 540;
@@ -81,7 +85,11 @@
     const y = G - h;
     const roof = rnd() < 0.42;
     let parts = `<rect class="body" x="${x}" y="${y}" width="${w}" height="${h}"/><rect class="shade" x="${x + w * 0.68}" y="${y}" width="${w * 0.32}" height="${h}"/>`;
-    if (roof) parts += `<polygon class="roof" points="${x - 4},${y} ${x + w / 2},${y - Math.min(90, w * 1.5)} ${x + w + 4},${y}"/>`;
+    if (roof) {
+      const top = y - Math.min(90, w * 1.5);
+      parts += `<polygon class="roof" points="${x - 4},${y} ${x + w / 2},${top} ${x + w + 4},${y}"/>`;
+      if (rnd() < 0.6) parts += `<rect x="${x + w / 2 - 1}" y="${top - 26}" width="2" height="27" fill="#5b4a36"/><path class="pennant" style="--d:-${rnd().toFixed(2)}s" d="M${x + w / 2 + 1} ${top - 25} l18 5 l-18 5z"/>`;
+    }
     else {
       const m = Math.max(3, Math.round(w / 12));
       const mw = w / (m * 2 - 1);
@@ -91,7 +99,7 @@
     for (let r = y + 22; r < G - 30; r += 30) {
       for (let c = 0; c < cols; c++) {
         const wx = cols === 1 ? x + w / 2 - ww / 2 : x + (c ? w * 0.62 : w * 0.24) - ww / 2;
-        const lit = rnd() < 0.55;
+        const lit = rnd() < 0.18;
         parts += `<rect class="win${lit ? ' lit' : ''}" x="${wx.toFixed(1)}" y="${r}" width="${ww}" height="${wh}" rx="3.5" style="--w:${(1.3 + rnd() * 3.5).toFixed(2)}s"/>`;
       }
     }
@@ -114,10 +122,10 @@
       ${Array.from({ length: 7 }, (_, k) => `<rect class="body" x="${kx + k * (kw / 13) * 2}" y="${G - kh - 14}" width="${kw / 13}" height="15"/>`).join('')}
       <path class="gate" d="M${kx + kw / 2 - 30} ${G} V${G - 70} a30 30 0 0 1 60 0 V${G}z"/>
       ${[0, 1, 2].map((r) => [0, 1, 2].map((c) => `<rect class="win lit" x="${kx + 34 + c * 44}" y="${G - kh + 40 + r * 70}" width="14" height="24" rx="7" style="--w:${(0.8 + r * 0.3 + c * 0.2).toFixed(2)}s"/>`).join('')).join('')}
-      <rect x="${kx + kw / 2 - 1.5}" y="${G - kh - 90}" width="3" height="78" fill="#f4f1ea"/>
+      <rect x="${kx + kw / 2 - 1.5}" y="${G - kh - 90}" width="3" height="78" fill="#5b4a36"/>
       <path class="flag" d="M${kx + kw / 2 + 1.5} ${G - kh - 88} h54 l-12 15 l12 15 h-54z"/>
     </g>`;
-  const wall = `<rect x="${lx}" y="${G - 110}" width="${rx - lx}" height="110" fill="#222b44"/>`;
+  const wall = `<rect class="wall" x="${lx}" y="${G - 110}" width="${rx - lx}" height="110"/>`;
   $('#castle').innerHTML = `<svg viewBox="0 ${G - 520} ${W} 540" aria-label="Eine Burg aus Apps">${wall}${left.join('')}${right.join('')}${keep}<rect class="ground" x="-200" y="${G}" width="${W + 400}" height="40"/></svg>`;
 
   // Tooltip and click on a tower
@@ -133,10 +141,10 @@
     tip.classList.add('on');
   });
   castle.addEventListener('pointerleave', () => tip.classList.remove('on'));
-  castle.addEventListener('click', (e) => { const t = e.target.closest('.tw'); if (t) document.getElementById(t.dataset.id)?.scrollIntoView({ behavior: 'smooth' }); });
+  castle.addEventListener('click', (e) => { const t = e.target.closest('.tw'); if (t) goTo(t.dataset.id); });
 
   // Parallax: the sky layers drift at different speeds while the hero is on screen
-  const layers = [['.stars', 0.45], ['.moon', 0.32], ['.hills.far', 0.18], ['.hills.near', 0.1], ['.hero-text', 0.28]].map(([q, k]) => [$(q), k]);
+  const layers = [['.clouds', 0.35], ['.sunball', 0.28], ['.hills.far', 0.18], ['.hills.near', 0.1], ['.hero-text', 0.28]].map(([q, k]) => [$(q), k]);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let ticking = false;
   addEventListener('scroll', () => {
@@ -150,15 +158,7 @@
     });
   }, { passive: true });
 
-  // The top bar turns dark over the hero
   const top = $('.top');
-  const under = new Set();
-  const darkObs = new IntersectionObserver((es) => {
-    es.forEach((e) => (e.isIntersecting ? under.add(e.target) : under.delete(e.target)));
-    top.classList.toggle('dark', under.size > 0);
-  }, { rootMargin: '-30px 0px -96% 0px' });
-  // observed after the groups exist (see below)
-  const watchDark = () => document.querySelectorAll('#hero, .group.games, #plattform').forEach((el) => darkObs.observe(el));
 
   // Groups
   // Three devices and 3–4 views: the tabs switch every device to the same view, crossfading
@@ -195,6 +195,12 @@
       </div>
       ${views3(a)}
     </article>`;
+  // Explorer: the group's apps as tabs over one shared stage
+  const explorer = (list) => `
+      <div class="explorer reveal">
+        ${list.length > 1 ? `<div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i>${esc(a.name)}</button>`).join('')}</div>` : ''}
+        <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `class="app${k ? '' : ' on'}`)).join('')}</div>
+      </div>`;
   // Small sites: a tile with the first view's desktop shot
   const tileHTML = (t) => {
     const v = (t.views || [])[0];
@@ -221,7 +227,7 @@
   };
   // Games: the big ones get the device stage, the others a card with their first shot
   const gamesHTML = (list) => `
-      ${list.some((g) => g.feature) ? `<div class="apps">${list.filter((g) => g.feature).map(appHTML).join('')}</div>` : ''}
+      ${list.some((g) => g.feature && g.views?.length) ? explorer(list.filter((g) => g.feature && g.views?.length)) : ''}
       <div class="games-grid">${list.filter((g) => !g.feature).map((g) => `
         <article class="game reveal" id="${esc(g.id)}" style="--c:${g.color}">
           ${gameShot(g, 'shot')}
@@ -234,7 +240,7 @@
     <section class="group${g.games ? ' games' : ''}" id="${esc(g.id)}">
       <div class="wrap">
         <div class="section-head reveal"><p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2>${esc(g.title)}<span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
-        ${g.apps?.some((x) => x.views?.length) ? `<div class="apps">${g.apps.filter((x) => x.views?.length).map(appHTML).join('')}</div>` : ''}
+        ${g.apps?.some((x) => x.views?.length) ? explorer(g.apps.filter((x) => x.views?.length)) : ''}
         ${g.apps?.some((x) => !x.views?.length) ? `<div class="services">${g.apps.filter((x) => !x.views?.length).map(serviceHTML).join('')}</div>` : ''}
         ${g.games?.length ? gamesHTML(g.games) : ''}
         ${g.tiles?.length ? `<div class="tiles">${g.tiles.map(tileHTML).join('')}</div>` : ''}
@@ -242,7 +248,6 @@
     </section>`;
   }).join('');
 
-  watchDark();
 
   // Animations that repaint stop while their section is off screen
   new IntersectionObserver(([e]) => $('#hero').classList.toggle('off', !e.isIntersecting)).observe($('#hero'));
@@ -292,7 +297,7 @@
       if (!e.isIntersecting) continue;
       chips.forEach((a) => a.classList.remove('on'));
       const on = chips.get(e.target.id);
-      if (on) { on.classList.add('on'); nav.scrollTo({ left: on.offsetLeft - 16, behavior: still ? 'auto' : 'smooth' }); }
+      if (on) { $('#menu-cur').textContent = on.textContent; on.classList.add('on'); nav.scrollTo({ left: on.offsetLeft - 16, behavior: still ? 'auto' : 'smooth' }); }
     }
   }, { rootMargin: '-45% 0px -50% 0px' });
   sections.forEach((s) => { const el = document.getElementById(s.id); if (el) spy.observe(el); });
@@ -320,7 +325,9 @@
       app.style.setProperty('--dwell', `${DWELL}ms`);
       tabs[at].querySelector('.bar').getAnimations?.().forEach((x) => { x.cancel(); x.play(); });
     };
-    const tick = () => { clearTimeout(timer); if (seen && !held && !still) timer = setTimeout(() => { go(at + 1); tick(); }, DWELL); };
+    const live = () => seen && app.classList.contains('on');
+    const tick = () => { clearTimeout(timer); app.classList.toggle('playing', live() && !held && !still); if (live() && !held && !still) timer = setTimeout(() => { go(at + 1); tick(); }, DWELL); };
+    app.addEventListener('shown', () => { go(0); tick(); });
     const pick = (j) => { held = true; app.classList.add('held'); app.classList.remove('playing'); go(j); clearTimeout(timer); };
     tabs.forEach((t, j) => {
       t.addEventListener('click', () => pick(j));
@@ -333,9 +340,51 @@
       });
     });
     // preload the next view once the app comes near
-    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { go(0); o.disconnect(); } }, { rootMargin: '400px 0px' }).observe(app);
-    new IntersectionObserver(([e]) => { seen = e.isIntersecting; app.classList.toggle('playing', seen && !held && !still); if (seen) tick(); else clearTimeout(timer); }, { threshold: 0.4 }).observe(app);
+    new IntersectionObserver(([e], o) => { if (e.isIntersecting && app.classList.contains('on')) { go(0); o.disconnect(); } }, { rootMargin: '400px 0px' }).observe(app.closest('.explorer') || app);
+    new IntersectionObserver(([e]) => { seen = e.isIntersecting; tick(); }, { threshold: 0.3 }).observe(app.closest('.explorer') || app);
   });
+
+  // Explorer: a tab shows its app; arrows move between apps
+  const showApp = (ex, id) => {
+    ex.querySelectorAll('.picker button').forEach((b) => { const on = b.dataset.app === id; b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on) b.parentElement.scrollTo({ left: b.offsetLeft - 20, behavior: still ? 'auto' : 'smooth' }); });
+    ex.querySelectorAll('.panels > .app').forEach((a) => { const on = a.id === id; if (on === a.classList.contains('on')) return; a.classList.toggle('on', on); if (on) a.dispatchEvent(new Event('shown')); });
+  };
+  document.querySelectorAll('.explorer').forEach((ex) => {
+    const btns = [...ex.querySelectorAll('.picker button')];
+    btns.forEach((b, j) => {
+      b.tabIndex = j ? -1 : 0;
+      b.addEventListener('click', () => showApp(ex, b.dataset.app));
+      b.addEventListener('keydown', (e) => {
+        const to = { ArrowRight: j + 1, ArrowLeft: j - 1, Home: 0, End: btns.length - 1 }[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        const t = btns[(to + btns.length) % btns.length];
+        showApp(ex, t.dataset.app); t.focus();
+      });
+    });
+  });
+  // A link to an app (castle, marquee, address) opens it in its explorer
+  const goTo = (id, smooth = true) => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const ex = el.closest('.explorer');
+    if (ex) showApp(ex, id);
+    (ex || el).scrollIntoView({ behavior: smooth && !still ? 'smooth' : 'auto', block: 'start' });
+    return true;
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.closest('#nav')) return;
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el?.closest('.explorer')) { e.preventDefault(); goTo(id); history.replaceState(null, '', `#${id}`); }
+  });
+  if (location.hash.length > 1) requestAnimationFrame(() => goTo(location.hash.slice(1), false));
+
+  // Phone menu: the section list opens under the bar
+  const menuBtn = $('.menu-btn');
+  menuBtn.addEventListener('click', () => { const open = !top.classList.contains('open'); top.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); });
+  $('#nav').addEventListener('click', () => { top.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); });
 
   // Lightbox
   const box = $('#lightbox');

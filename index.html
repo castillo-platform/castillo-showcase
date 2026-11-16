@@ -10,6 +10,7 @@
 <meta property="og:image" content="https://castillo-platform.github.io/castillo-showcase/shots/og.png">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f6f3ee">
+<meta name="color-scheme" content="light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 29V12h4v4h3v-8h4v4h2V8h4v8h3v-4h4v17z' fill='%231d2433'/%3E%3Cpath d='M14 29v-6a2 2 0 0 1 4 0v6z' fill='%23f2a93b'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/Geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css">
@@ -22,6 +23,7 @@
       <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 29V12h4v4h3v-8h4v4h2V8h4v8h3v-4h4v17z"/><path class="door" d="M14 29v-6a2 2 0 0 1 4 0v6z"/></svg>
       <b>Castillo</b>
     </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav"><span class="cur" id="menu-cur"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menü</button>
     <nav class="chips" id="nav" aria-label="Bereiche"></nav>
   </div>
 </header>
@@ -29,8 +31,8 @@
 <main id="top">
   <section class="hero" id="hero">
     <div class="sky" aria-hidden="true">
-      <div class="stars" id="stars"></div>
-      <div class="moon"></div>
+      <div class="sunball"></div>
+      <div class="clouds" id="clouds"></div>
       <svg class="hills far" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 220 C 200 120 380 170 560 140 S 900 60 1100 130 1400 110 1600 160 V300 H0z"/></svg>
       <svg class="hills near" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 250 C 260 190 420 230 640 205 S 1080 170 1280 215 1500 200 1600 225 V300 H0z"/></svg>
       <div class="castle" id="castle"></div>

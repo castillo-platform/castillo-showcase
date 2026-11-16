@@ -44,7 +44,7 @@ window.CASTILLO_PLATFORM = {
 window.CASTILLO_PLATFORM.platform.arch = (() => {
   const box = (x, y, w, h, title, sub, c, opts = {}) => `
     <g>
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${opts.fill || '#232b3b'}" stroke="${opts.stroke || '#323c50'}" ${opts.dash ? 'stroke-dasharray="6 6"' : ''}/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${opts.fill || '#fbf9f5'}" stroke="${opts.stroke || '#e3dccf'}" ${opts.dash ? 'stroke-dasharray="6 6"' : ''}/>
       ${c ? `<rect x="${x + 16}" y="${y + 18}" width="10" height="10" rx="3" fill="${c}"/>` : ''}
       <text x="${x + (c ? 34 : 16)}" y="${y + 28}" class="arch-t">${title}</text>
       ${sub ? `<text x="${x + 16}" y="${y + 50}" class="arch-s">${sub}</text>` : ''}
@@ -52,15 +52,15 @@ window.CASTILLO_PLATFORM.platform.arch = (() => {
   let n = 0;
   const arrow = (d, label, lx, ly, opts = {}) => `
     <path d="${d}" fill="none" stroke="${opts.c || '#7d8aa3'}" stroke-width="1.6" ${opts.dash ? 'stroke-dasharray="5 5"' : ''} marker-end="url(#ah)"/>
-    <circle r="${opts.dash ? 2.5 : 3.5}" fill="${opts.dash ? '#a2aab8' : '#f2a93b'}" class="pkt"><animateMotion dur="${(1.6 + (n++ % 5) * 0.35).toFixed(2)}s" begin="${((n * 0.37) % 2).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>
+    <circle r="${opts.dash ? 2.5 : 3.5}" fill="${opts.dash ? '#9aa6ba' : '#e8890c'}" class="pkt"><animateMotion dur="${(1.6 + (n++ % 5) * 0.35).toFixed(2)}s" begin="${((n * 0.37) % 2).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>
     ${label ? `<text x="${lx}" y="${ly}" class="arch-l" text-anchor="${opts.anchor || 'middle'}">${label}</text>` : ''}`;
   return `
   <svg viewBox="0 0 1200 660" role="img" aria-label="Architektur von Castillo">
     <style>
-      .arch-t { font: 600 16px Geist, system-ui, sans-serif; fill: #eef1f6; }
-      .arch-s { font: 400 14px Geist, system-ui, sans-serif; fill: #a2aab8; }
-      .arch-l { font: 500 13px 'Geist Mono', ui-monospace, monospace; fill: #a2aab8; }
-      .arch-h { font: 700 14px 'Geist Mono', ui-monospace, monospace; fill: #f2a93b; letter-spacing: .08em; }
+      .arch-t { font: 600 16px Geist, system-ui, sans-serif; fill: #1d2433; }
+      .arch-s { font: 400 14px Geist, system-ui, sans-serif; fill: #5b6372; }
+      .arch-l { font: 500 13px 'Geist Mono', ui-monospace, monospace; fill: #6b7383; }
+      .arch-h { font: 700 14px 'Geist Mono', ui-monospace, monospace; fill: #b4690e; letter-spacing: .08em; }
     </style>
     <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7d8aa3"/></marker></defs>
 
@@ -70,13 +70,13 @@ window.CASTILLO_PLATFORM.platform.arch = (() => {
     ${box(20, 340, 230, 64, 'Gruppenchat', 'Meldungen und Knöpfe', '#e8603c')}
 
     ${box(310, 70, 200, 80, 'Cloudflare', 'Tunnel + Access', '#9b7bea')}
-    ${box(310, 270, 200, 112, 'GitHub', 'Upstream + Castillo', '#eef1f6')}
+    ${box(310, 270, 200, 112, 'GitHub', 'Upstream + Castillo', '#1d2433')}
     <text x="326" y="356" class="arch-s">PRs · Releases</text><text x="326" y="374" class="arch-s">Deployments</text>
 
     <rect x="570" y="20" width="610" height="460" rx="22" fill="none" stroke="#f2a93b" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/>
     <text x="594" y="50" class="arch-h">HEIMSERVER · K3S</text>
     ${box(594, 70, 170, 64, 'Traefik', 'Ingress', '#4f8df5')}
-    ${box(790, 70, 366, 64, 'Apps', 'rund 20 · Go + SQLite + React-PWA', '#f2a93b', { fill: '#2b3446' })}
+    ${box(790, 70, 366, 64, 'Apps', 'rund 20 · Go + SQLite + React-PWA', '#f2a93b', { fill: '#fff4dc', stroke: '#f2d39b' })}
     ${box(594, 160, 170, 64, 'Directory', 'Wer ist wer?', '#9b7bea')}
     ${box(790, 160, 175, 64, 'LLM-Gateway', '→ Cloud-Modelle', '#5b6cf0')}
     ${box(981, 160, 175, 64, 'MCP-Server', 'Werkzeuge + Browser', '#5b6cf0')}
