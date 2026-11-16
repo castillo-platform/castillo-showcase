@@ -276,6 +276,36 @@ window.CASTILLO_VIEWS = {
    "phone": "shots/ferien-kosten-phone.webp"
   }
  ],
+ "fit": [
+  {
+   "title": "Tagesansicht",
+   "text": "Zeigt Level, Serie und die Schritte bis zum Tagesziel, darunter den Tages-Check mit drei Ja-Nein-Fragen zu Mittagessen, Knabbern und Alkohol.",
+   "desktop": "shots/fit-heute-desktop.webp",
+   "tablet": "shots/fit-heute-tablet.webp",
+   "phone": "shots/fit-heute-phone.webp"
+  },
+  {
+   "title": "Essen",
+   "text": "Trägt Mahlzeiten mit einem Tipp aus Vorlagen ein und rechnet Kalorien, Protein und das übrige Knabber-Budget mit.",
+   "desktop": "shots/fit-essen-desktop.webp",
+   "tablet": "shots/fit-essen-tablet.webp",
+   "phone": "shots/fit-essen-phone.webp"
+  },
+  {
+   "title": "Gewichtskurve",
+   "text": "Vergleicht das gemessene Gewicht mit der Planlinie von 93 auf 84 kg bis zum 9. Februar.",
+   "desktop": "shots/fit-fortschritt-desktop.webp",
+   "tablet": "shots/fit-fortschritt-tablet.webp",
+   "phone": "shots/fit-fortschritt-phone.webp"
+  },
+  {
+   "title": "Erfolge",
+   "text": "Zählt XP, Serie und Joker und hakt ab, welche der fünf Tagesziele heute erreicht sind.",
+   "desktop": "shots/fit-erfolge-desktop.webp",
+   "tablet": "shots/fit-erfolge-tablet.webp",
+   "phone": "shots/fit-erfolge-phone.webp"
+  }
+ ],
  "color": [
   {
    "title": "Themenübersicht",
