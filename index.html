@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Castillo: eine Familie, ein Server, eigene Apps</title>
+<meta name="description" content="Castillo ist die selbst gebaute Plattform einer Familie: Finanzen, Dokumente, Essen, Nachrichten, Spiele für die Kinder und die Technik darunter, auf einem Mini-PC zu Hause.">
+<meta property="og:title" content="Castillo: eine Familie, ein Server, eigene Apps">
+<meta property="og:description" content="Selbst gebaute Apps für den Familienalltag, die Kinder und die Finanzen, auf einer eigenen Kubernetes-Plattform.">
+<meta property="og:image" content="https://castillo-platform.github.io/castillo-showcase/shots/og.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f6f3ee">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 29V12h4v4h3v-8h4v4h2V8h4v8h3v-4h4v17z' fill='%231d2433'/%3E%3Cpath d='M14 29v-6a2 2 0 0 1 4 0v6z' fill='%23f2a93b'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/Geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="logo" href="#top" aria-label="Castillo">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 29V12h4v4h3v-8h4v4h2V8h4v8h3v-4h4v17z"/><path class="door" d="M14 29v-6a2 2 0 0 1 4 0v6z"/></svg>
+      <b>Castillo</b>
+    </a>
+    <nav class="chips" id="nav" aria-label="Bereiche"></nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" id="hero">
+    <div class="sky" aria-hidden="true">
+      <div class="stars" id="stars"></div>
+      <div class="moon"></div>
+      <svg class="hills far" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 220 C 200 120 380 170 560 140 S 900 60 1100 130 1400 110 1600 160 V300 H0z"/></svg>
+      <svg class="hills near" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 250 C 260 190 420 230 640 205 S 1080 170 1280 215 1500 200 1600 225 V300 H0z"/></svg>
+      <div class="castle" id="castle"></div>
+    </div>
+    <div class="wrap hero-text">
+      <p class="kicker">Eine eigene Plattform auf einem Mini-PC</p>
+      <h1><span class="line">Eine Familie.</span><span class="line">Ein Server.</span><span class="line sun">Ihre eigenen Apps.</span></h1>
+      <p class="lead">Castillo ist eine selbst betriebene Plattform auf einem Mini-PC zu Hause. Darauf laufen Apps für Geld, Dokumente, Essen, Nachrichten und Aufgaben, dazu Spiele für die Kinder. Gebaut haben sie zum grössten Teil KI-Agenten, gesteuert von einer Person.</p>
+      <a class="cta" href="#apps">Zu den Apps <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+    </div>
+  </section>
+  <div class="wrap stats-wrap"><div class="stats" id="stats"></div></div>
+  <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+
+  <div id="apps"><div id="groups"></div></div>
+
+  <section class="platform" id="plattform">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Unter der Haube</p>
+        <h2>Die Plattform</h2>
+        <p class="sub" id="platform-lead"></p>
+      </div>
+      <div class="arch" id="arch"></div>
+      <div class="layers" id="layers"></div>
+    </div>
+  </section>
+
+  <section class="how" id="arbeitsweise">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Wie hier gebaut wird</p>
+        <h2>Ein Mensch, viele Agenten</h2>
+        <p class="sub" id="how-lead"></p>
+      </div>
+      <div class="how-grid" id="how"></div>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span class="logo small"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 29V12h4v4h3v-8h4v4h2V8h4v8h3v-4h4v17z"/><path class="door" d="M14 29v-6a2 2 0 0 1 4 0v6z"/></svg><b>Castillo</b></span>
+    <p>Alle Screenshots stammen aus lokalen Läufen mit Demo- und Beispieldaten. Kein Name, keine Zahl und kein Dokument darin ist echt.</p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox">
+  <button class="close" type="button" aria-label="Schliessen">✕</button>
+  <figure><img alt=""><figcaption></figcaption></figure>
+  <button class="prev" type="button" aria-label="Zurück">‹</button>
+  <button class="next" type="button" aria-label="Weiter">›</button>
+</dialog>
+
+<script src="platform.js"></script>
+<script src="views.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
