@@ -105,7 +105,7 @@ window.CASTILLO_PLATFORM.platform.arch = (() => {
     ${arrow('M594 330 C 540 360, 540 370, 514 360', 'Release', 548, 384)}
     ${arrow('M594 412 C 400 450, 300 420, 254 380', '', 0, 0)}
     ${arrow('M679 224 C 679 250, 520 250, 512 140', '', 0, 0, { dash: true })}
-    <text x="520" y="214" class="arch-l">gleicht Access ab</text>
+    <text x="512" y="244" class="arch-l">gleicht</text><text x="512" y="260" class="arch-l">Access ab</text>
     ${arrow('M877 540 L 877 448', 'Secrets', 887, 500, { dash: true, anchor: 'start' })}
     ${arrow('M1068 448 L 1068 536', 'Logs · Backups', 1078, 500, { dash: true, anchor: 'start' })}
   </svg>`;
