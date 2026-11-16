@@ -68,6 +68,8 @@
   // Marquee: every app as a chip, twice so the loop is seamless
   const chip = (a) => `<a href="#${esc(a.id)}" tabindex="-1" style="--c:${a.color}"><i>${icon(a.icon)}</i>${esc(a.name)}</a>`;
   $('#marquee').innerHTML = apps.map(chip).join('') + apps.map(chip).join('');
+  const back = [...apps].reverse();
+  $('#marquee2').innerHTML = back.map(chip).join('') + back.map(chip).join('');
 
   // Stars: a seeded sky, so it looks the same on every visit
   let seed = 7;
@@ -239,7 +241,7 @@
     return `
     <section class="group${g.games ? ' games' : ''}" id="${esc(g.id)}">
       <div class="wrap">
-        <div class="section-head reveal"><p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2>${esc(g.title)}<span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
+        <div class="section-head reveal"><p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2><span class="mask"><span>${esc(g.title)}</span></span><span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
         ${g.apps?.some((x) => x.views?.length) ? explorer(g.apps.filter((x) => x.views?.length)) : ''}
         ${g.apps?.some((x) => !x.views?.length) ? `<div class="services">${g.apps.filter((x) => !x.views?.length).map(serviceHTML).join('')}</div>` : ''}
         ${g.games?.length ? gamesHTML(g.games) : ''}
@@ -260,15 +262,57 @@
   const archSvg = $('#arch svg');
   if (archSvg) new IntersectionObserver(([e]) => (e.isIntersecting && !still ? archSvg.unpauseAnimations() : archSvg.pauseAnimations())).observe(archSvg);
   $('#layers').innerHTML = P.layers.map((l) => `
-    <div class="layer reveal" style="--c:${l.color}"><h4><i></i>${esc(l.name)}</h4>
+    <div class="layer reveal" style="--c:${l.color};--k:${P.layers.indexOf(l)}"><h4><i></i>${esc(l.name)}</h4>
       <ul>${l.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
       <div class="tools">${(l.tools || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>`).join('');
 
   // How it is built
   const H = D.how;
   $('#how-lead').textContent = H.lead;
-  $('#how').innerHTML = H.cards.map((c) => `<div class="card reveal" style="${c.color ? `--c:${c.color}` : ''}">${c.big ? `<span class="big">${esc(c.big)}</span>` : ''}<b>${esc(c.title)}</b><p>${esc(c.text)}</p></div>`).join('');
+  $('#how').innerHTML = H.cards.map((c, k) => `<div class="card reveal" style="--k:${k};${c.color ? `--c:${c.color}` : ''}">${c.big ? `<span class="big">${esc(c.big)}</span>` : ''}<b>${esc(c.title)}</b><p>${esc(c.text)}</p></div>`).join('');
   $('#timeline').innerHTML = (H.timeline || []).map((t) => `<li class="reveal"><time>${esc(t.date)}</time><span>${esc(t.text)}</span></li>`).join('');
+
+  // Commits per day: one bar a day, milestone days in amber with a dot, bars grow when seen
+  const C = H.commits || [];
+  if (C.length) {
+    const tl = Object.fromEntries((H.timeline || []).map((t) => [t.date.split('.').reverse().join('-'), t.text]));
+    const max = Math.max(...C.map(([, n]) => n));
+    const top = Math.ceil(max / 100) * 100;
+    const narrow = innerWidth < 640;
+    const W = narrow ? 440 : 1000, Hh = 300, padL = 44, padB = 34, padT = 26;
+    const bw = (W - padL) / C.length;
+    const y = (n) => padT + (Hh - padT - padB) * (1 - n / top);
+    const fmt = new Intl.NumberFormat('de-CH');
+    const day = (d) => `${+d.slice(8)}.${+d.slice(5, 7)}.`;
+    const grid = [0, top / 2, top].map((v) => `<line x1="${padL}" x2="${W}" y1="${y(v)}" y2="${y(v)}" class="g"/><text x="${padL - 8}" y="${y(v) + 4}" class="ax" text-anchor="end">${fmt.format(v)}</text>`).join('');
+    const bars = C.map(([d, n], i) => {
+      const x = padL + i * bw + 1, w = bw - 2, h = Math.max(n ? 3 : 0, (Hh - padT - padB) * n / top), yy = Hh - padB - h;
+      const ms = tl[d];
+      const tip = `${day(d)} · ${fmt.format(n)} Commits${ms ? ` · ${ms}` : ''}`;
+      return `<g class="day${ms ? ' ms' : ''}" style="--i:${i}" tabindex="0" aria-label="${esc(tip)}" data-tip="${esc(tip)}">
+        <rect class="hit" x="${padL + i * bw}" y="${padT}" width="${bw}" height="${Hh - padT - padB}"/>
+        <path class="bar" d="M${x} ${Hh - padB}V${yy + Math.min(4, h)}q0-4 4-4h${w - 8}q4 0 4 4V${Hh - padB}z"/>
+        ${ms ? `<circle cx="${x + w / 2}" cy="${yy - 10}" r="4.5" class="pin"/>` : ''}
+        ${i % (narrow ? 5 : 3) === 0 ? `<text x="${x + w / 2}" y="${Hh - 12}" class="ax" text-anchor="middle">${day(d)}</text>` : ''}
+      </g>`;
+    }).join('');
+    const total = C.reduce((a, [, n]) => a + n, 0);
+    $('#commits').innerHTML = `
+      <figcaption><b>Commits pro Tag</b><span>${fmt.format(total)} vom ${day(C[0][0])} bis ${day(C[C.length - 1][0])}, Tage mit Meilenstein in Gelb</span></figcaption>
+      <div class="plot"><svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Commits pro Tag, ${fmt.format(total)} insgesamt">${grid}${bars}<line x1="${padL}" x2="${W}" y1="${Hh - padB}" y2="${Hh - padB}" class="base"/></svg><div class="ctip" role="status"></div></div>
+      <table class="sr"><caption>Commits pro Tag</caption><tr><th>Tag</th><th>Commits</th></tr>${C.map(([d, n]) => `<tr><td>${day(d)}</td><td>${n}</td></tr>`).join('')}</table>`;
+    const plot = $('#commits .plot'), ctip = $('#commits .ctip');
+    const showTip = (g) => {
+      const r = g.querySelector('.hit').getBoundingClientRect(), pr = plot.getBoundingClientRect();
+      ctip.textContent = g.dataset.tip;
+      ctip.style.left = `${Math.min(pr.width - 10, Math.max(10, r.left - pr.left + r.width / 2))}px`;
+      ctip.classList.add('on');
+      plot.querySelectorAll('.day').forEach((x) => x.classList.toggle('dim', x !== g));
+    };
+    const hideTip = () => { ctip.classList.remove('on'); plot.querySelectorAll('.day').forEach((x) => x.classList.remove('dim')); };
+    plot.querySelectorAll('.day').forEach((g) => { g.addEventListener('pointerenter', () => showTip(g)); g.addEventListener('focus', () => showTip(g)); g.addEventListener('blur', hideTip); });
+    plot.addEventListener('pointerleave', hideTip);
+  }
 
   // Timeline: the line fills and the dots light up as it scrolls past
   const tl = $('#timeline');
@@ -385,6 +429,41 @@
   const menuBtn = $('.menu-btn');
   menuBtn.addEventListener('click', () => { const open = !top.classList.contains('open'); top.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); });
   $('#nav').addEventListener('click', () => { top.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); });
+
+  // Scroll effects in one frame: progress bar, the devices drifting apart in depth
+  const bar = $('.progress');
+  let fxTick = false;
+  const fx = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${h > 0 ? (scrollY / h).toFixed(4) : 0})`;
+    if (!still) document.querySelectorAll('.app.on .trio').forEach((t) => {
+      const r = t.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; // -0.5 … 0.5 around the middle
+      t.style.setProperty('--dy', `${(p * 40).toFixed(1)}px`);
+    });
+    fxTick = false;
+  };
+  addEventListener('scroll', () => { if (!fxTick) { fxTick = true; requestAnimationFrame(fx); } }, { passive: true });
+  fx();
+
+  // The picker's highlight slides to the chosen app
+  document.querySelectorAll('.picker').forEach((pk) => {
+    const pill = document.createElement('span');
+    pill.className = 'pill';
+    pk.prepend(pill);
+    const place = () => { const on = pk.querySelector('button.on'); if (on) { pill.style.width = `${on.offsetWidth}px`; pill.style.transform = `translateX(${on.offsetLeft}px)`; } };
+    new MutationObserver(place).observe(pk, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    addEventListener('resize', place);
+    requestAnimationFrame(place);
+  });
+
+  // The hero button leans towards the pointer
+  const cta = $('.cta');
+  if (cta && !still && matchMedia('(pointer: fine)').matches) {
+    cta.addEventListener('pointermove', (e) => { const r = cta.getBoundingClientRect(); cta.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * 0.25).toFixed(1)}px, ${((e.clientY - r.top - r.height / 2) * 0.35).toFixed(1)}px)`; });
+    cta.addEventListener('pointerleave', () => { cta.style.transform = ''; });
+  }
 
   // Lightbox
   const box = $('#lightbox');

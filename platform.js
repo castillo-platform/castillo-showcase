@@ -23,9 +23,11 @@ window.CASTILLO_PLATFORM = {
       { big: '18', title: 'Seiten im „Brain“', text: 'Ein Wissensspeicher als Markdown in Git. Hooks schlagen zu jeder Frage passende Seiten vor, nachts konsolidiert ein „Dream“-Lauf.', color: '#2fb380' },
       { big: '1', title: 'Plattform-Bot', text: 'Arbeitet im Gruppenchat und auf GitHub mit, liest Code und Checks und schlägt Änderungen als Entwurf vor. Mergen darf er nicht.', color: '#e8603c' },
       { big: '2', title: 'Plattformen, ein Upstream', text: 'Neutrale Apps und Bausteine werden mit einer befreundeten Plattform geteilt. Jede betreibt daraus ihre eigene Instanz.', color: '#f2a93b' },
-      { big: '~2’400', title: 'Commits in drei Wochen', text: 'Seit dem Start von Castillo über alle Repos beider Organisationen gezählt, von Menschen, Agenten und Bot zusammen.', color: '#e0477c' },
+      { big: '2’382', title: 'Commits in drei Wochen', text: 'Vom 28. Oktober bis 16. November über alle Repos beider Organisationen, von Menschen, Agenten und Bot zusammen.', color: '#e0477c' },
       { big: '0', title: 'GitHub Actions', text: 'Prüfen, Releasen und Ausliefern laufen über Webhooks in der eigenen CI, mit Meldungen und Knöpfen im Chat.', color: '#4f8df5' },
     ],
+    // Commits per day over every repo of both organisations, each commit counted once (git log, 2026-11-17).
+    commits: [["2026-10-28", 152], ["2026-10-29", 84], ["2026-10-30", 50], ["2026-10-31", 359], ["2026-11-01", 318], ["2026-11-02", 61], ["2026-11-03", 1], ["2026-11-04", 11], ["2026-11-05", 0], ["2026-11-06", 13], ["2026-11-07", 149], ["2026-11-08", 89], ["2026-11-09", 111], ["2026-11-10", 47], ["2026-11-11", 37], ["2026-11-12", 486], ["2026-11-13", 155], ["2026-11-14", 103], ["2026-11-15", 34], ["2026-11-16", 122]],
     timeline: [
       { date: '28.10.2026', text: 'Castillo entsteht aus der Codebasis einer befreundeten Plattform, mit eigener Organisation und eigenem Server.' },
       { date: '31.10.2026', text: 'Der gemeinsame Upstream startet mit geteilten Charts sowie Directory, Console, Paper und Memory. Die erste Kinder-App geht live.' },
@@ -43,7 +45,7 @@ window.CASTILLO_PLATFORM = {
 // The architecture: who talks to whom. Drawn for a dark section; boxes carry the layer colours.
 window.CASTILLO_PLATFORM.platform.arch = (() => {
   const box = (x, y, w, h, title, sub, c, opts = {}) => `
-    <g>
+    <g class="node" style="--k:${(x * 7 + y * 3) % 23}">
       <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${opts.fill || '#fbf9f5'}" stroke="${opts.stroke || '#e3dccf'}" ${opts.dash ? 'stroke-dasharray="6 6"' : ''}/>
       ${c ? `<rect x="${x + 16}" y="${y + 18}" width="10" height="10" rx="3" fill="${c}"/>` : ''}
       <text x="${x + (c ? 34 : 16)}" y="${y + 28}" class="arch-t">${title}</text>

@@ -352,3 +352,90 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .app .views .bar::after { animation: none; }
   .pkt { display: none; }
 }
+
+/* Commits per day: one hue, milestone days in amber with a dot, bars rise in turn when seen */
+.commits { margin: 48px 0 0; background: var(--sheet); border-radius: 24px; box-shadow: var(--shadow); padding: 22px 22px 14px; }
+.commits figcaption { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; margin-bottom: 8px; }
+.commits figcaption b { font-size: 20px; }
+.commits figcaption span { color: var(--muted); font-size: 15px; }
+.commits .plot { position: relative; }
+.commits svg { display: block; width: 100%; height: auto; overflow: visible; }
+.commits .g { stroke: var(--line); stroke-width: 1; }
+.commits .base { stroke: #c9c1b3; stroke-width: 1.5; }
+.commits .ax { font: 500 13px var(--mono); fill: var(--muted); }
+.commits .hit { fill: transparent; }
+.commits .bar { fill: #7f97b8; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform .8s var(--ease), opacity .2s; transition-delay: calc(var(--i) * 35ms); }
+.commits .ms .bar { fill: var(--sun); }
+.commits .pin { fill: var(--sun-ink); opacity: 0; transition: opacity .4s; transition-delay: calc(var(--i) * 35ms + .5s); }
+.commits.in .bar { transform: scaleY(1); }
+.commits.in .pin { opacity: 1; }
+.commits .day { cursor: default; outline: none; }
+.commits .day.dim .bar { opacity: .35; }
+.commits .day:focus-visible .bar { stroke: var(--ink); stroke-width: 2; }
+.commits .ctip { position: absolute; top: -6px; left: 0; translate: -50% -100%; max-width: min(360px, 90%); background: var(--ink); color: var(--page); font-size: 14px; font-weight: 600; line-height: 1.35; padding: 7px 11px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.commits .ctip.on { opacity: 1; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 640px) { .commits { padding: 16px 12px 8px; } }
+@media (prefers-reduced-motion: reduce) { .commits .bar { transform: none; transition: none; } .commits .pin { opacity: 1; transition: none; } }
+
+/* ---------- More motion (all off under reduced motion) ---------- */
+/* Scroll progress along the top edge */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 40; background: linear-gradient(90deg, #4f8df5, #2fb380, var(--sun), #e8603c); transform-origin: left; transform: scaleX(0); pointer-events: none; }
+
+/* A balloon in the castle's colours rises slowly across the sky */
+.balloon { position: absolute; left: 0; bottom: 0; width: clamp(34px, 3.4vw, 54px); animation: balloon 70s linear infinite; animation-delay: -18s; }
+@keyframes balloon {
+  0% { transform: translate(12vw, 20vh); }
+  25% { transform: translate(30vw, -18vh); }
+  50% { transform: translate(52vw, -38vh); }
+  75% { transform: translate(74vw, -52vh); }
+  100% { transform: translate(96vw, -70vh); }
+}
+/* Towers spring a little on hover */
+.castle .tw:hover { animation: none; transform: scaleY(1.04); transition: transform .35s cubic-bezier(.3, 1.8, .5, 1); }
+
+/* Second marquee row runs the other way */
+.track.rev { margin-top: 12px; animation-direction: reverse; animation-duration: 85s; }
+
+/* Section titles rise out of a mask */
+.section-head h2 .mask { display: inline-block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+.section-head h2 .mask > span { display: inline-block; translate: 0 105%; transition: translate 1s var(--ease) .1s; }
+.section-head.in h2 .mask > span { translate: 0 0; }
+.section-head .count { opacity: 0; transition: opacity .6s .6s; }
+.section-head.in .count { opacity: 1; }
+
+/* The picker's highlight slides between apps */
+.picker { position: relative; }
+.picker .pill { position: absolute; top: 4px; left: 0; height: calc(100% - 8px); border-radius: 16px; background: var(--page); box-shadow: inset 0 0 0 1px var(--line); transition: transform .5s var(--ease), width .5s var(--ease); pointer-events: none; }
+.picker button { position: relative; z-index: 1; }
+.picker button.on { background: transparent; box-shadow: none; }
+
+/* Devices drift apart in depth while their app scrolls past */
+.app.on .dev.desk { translate: 0 calc(var(--dy, 0px) * -0.4); }
+.app.on .dev.tab { translate: 0 calc(var(--dy, 0px) * 0.5); }
+.app.on .dev.ph { translate: 0 calc(var(--dy, 0px) * 1.1); }
+
+/* Cards and layers come in one after the other */
+.layer.reveal, .card.reveal { transition-delay: calc(var(--k, 0) * 70ms); }
+.card .big { display: inline-block; transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+.card:hover .big { transform: translateY(-4px) scale(1.06); }
+.layer, .card, .service, .stat { transition: box-shadow .3s, transform .4s var(--ease); }
+.layer:hover, .card:hover, .service:hover, .stat:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+/* Architecture: each box gives a soft beat now and then, as if a request just arrived */
+.arch .node rect:first-child { transform-box: fill-box; transform-origin: center; animation: beat 4.6s ease-in-out infinite; animation-delay: calc(var(--k) * -0.2s); }
+@keyframes beat { 0%, 86%, 100% { transform: scale(1); } 90% { transform: scale(1.025); } }
+
+/* Stat figures land with a small bounce */
+.stat.in b { animation: land .8s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes land { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .progress, .balloon { display: none; }
+  .section-head h2 .mask > span { translate: none; transition: none; }
+  .section-head .count { opacity: 1; transition: none; }
+  .picker .pill { transition: none; }
+  .app.on .dev.desk, .app.on .dev.tab, .app.on .dev.ph { translate: none; }
+  .arch .node rect:first-child, .stat.in b { animation: none; }
+  .track.rev { animation: none; }
+}

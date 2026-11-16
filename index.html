@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="logo" href="#top" aria-label="Castillo">
@@ -33,6 +34,7 @@
     <div class="sky" aria-hidden="true">
       <div class="sunball"></div>
       <div class="clouds" id="clouds"></div>
+      <svg class="balloon" viewBox="0 0 60 92" aria-hidden="true"><path d="M30 2C14 2 3 14 3 29c0 16 15 30 22 38h10c7-8 22-22 22-38C57 14 46 2 30 2z" fill="#e8603c"/><path d="M30 2c-7 0-12 12-12 27s6 30 9 38h6c3-8 9-23 9-38S37 2 30 2z" fill="#f2a93b"/><path d="M30 2c-2 0-4 12-4 27s2 30 3 38h2c1-8 3-23 3-38S32 2 30 2z" fill="#4f8df5"/><path d="M25 67l2 12M35 67l-2 12" stroke="#5b4a36" stroke-width="1.6"/><rect x="24" y="78" width="12" height="11" rx="2" fill="#8a6a45"/></svg>
       <svg class="hills far" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 220 C 200 120 380 170 560 140 S 900 60 1100 130 1400 110 1600 160 V300 H0z"/></svg>
       <svg class="hills near" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 250 C 260 190 420 230 640 205 S 1080 170 1280 215 1500 200 1600 225 V300 H0z"/></svg>
       <div class="castle" id="castle"></div>
@@ -45,7 +47,7 @@
     </div>
   </section>
   <div class="wrap stats-wrap"><div class="stats" id="stats"></div></div>
-  <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+  <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div><div class="track rev" id="marquee2"></div></div>
 
   <div id="apps"><div id="groups"></div></div>
 
@@ -69,6 +71,7 @@
         <p class="sub" id="how-lead"></p>
       </div>
       <div class="how-grid" id="how"></div>
+      <figure class="commits reveal" id="commits"></figure>
       <ol class="timeline" id="timeline"></ol>
     </div>
   </section>
