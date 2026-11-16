@@ -35,7 +35,7 @@ window.CASTILLO_PLATFORM = {
       { date: '12.11.2026', text: 'Keine GitHub Actions mehr: Prüfen und Ausliefern übernimmt die eigene CI. Der Plattform-Bot geht live.' },
       { date: '13.11.2026', text: 'Eine neue App geht vom Scaffold bis in die Produktion am selben Tag.' },
       { date: '14.11.2026', text: 'Das Brain schreibt selbst nach, was eine Session gelernt hat, und räumt jede Nacht auf.' },
-      { date: '16.11.2026', text: 'Stand dieser Seite: 36 Bausteine der Plattform, 20 Apps, 17 Websites und Spiele.' },
+      { date: '16.11.2026', text: 'Stand dieser Seite: 36 Bausteine der Plattform und 20 Apps.' },
     ],
   },
 };

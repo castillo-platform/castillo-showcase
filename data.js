@@ -7,7 +7,7 @@ window.CASTILLO = {
   ...window.CASTILLO_PLATFORM,
   stats: [
     { n: '20', from: 'apps', label: 'Apps und Spiele', color: '#f2a93b' },
-    { n: '17', from: 'sites', label: 'kleine Websites', color: '#2fb380' },
+    
     { n: '36', label: 'Bausteine der Plattform', color: '#4f8df5' },
     { n: '1', label: 'Mini-PC zu Hause', color: '#e8603c' },
   ],
@@ -69,7 +69,7 @@ window.CASTILLO = {
     ] },
 
     { id: 'spiele', nav: 'Spiele', kicker: 'Spielen', title: 'Die Spiele',
-      sub: 'Selbst gebaute Spiele ohne Werbung, ohne Käufe und ohne Verlieren. Gespielt wird im Browser, auf dem iPad oder am Computer.', games: [
+      sub: 'Selbst gebaute Spiele ohne Werbung, ohne Käufe und ohne Verlieren, gespielt auf dem iPad und dem iPhone.', games: [
       A('baustelle', "Baustelle XXL", '#f5b700', 'crane', "Eine Stadt bauen mit Bagger, Kran und Betonmischer. Ein grosser Knopf macht immer den nächsten Arbeitsschritt.", {
         who: "iPhone und iPad",
         feature: true,
@@ -85,42 +85,6 @@ window.CASTILLO = {
         feature: true,
         features: ["Ungewöhnliche Kombinationen fahren auch, etwa ein Feuerwehr-Traktor", "58 kleine Aufgaben auf der Insel", "Waschanlage: Der Schlamm geht dort weg, wo der Finger reibt", "Kein Verlieren, keine Zeitlimits, gesprochene Sätze statt Text"],
         tags: ["Go", "SQLite", "react-three-fiber"] }),
-      A('dracheninsel', "Dracheninseln", '#16a34a', 'dragon', "Ein Drachenei finden und den Drachen bis zum ersten Flug grossziehen, auf vier Inseln mit 31 Story-Momenten.", {
-        who: "Am Computer",
-        feature: true,
-        features: ["Drachen füttern, waschen, reiten und fliegen", "Rechenaufgaben an Werkbänken", "Kein Hunger-Timer, kein Verlust", "Grafik, Modelle und Musik prozedural erzeugt"],
-        tags: ["Three.js", "Web Audio"] }),
-      A('einhorn', "Einhorn-Akademie", '#ec4899', 'star', "Als junges Einhorn durch ein offenes 3D-Tal reiten und an Siegeltoren Rechenaufgaben lösen.", {
-        who: "Am Computer",
-        features: ["Zwei Kapitel mit Haupt- und Nebenmissionen", "Hinweise nach zwei Fehlversuchen", "Alle Figuren sprechen mit eigener Stimme"],
-        tags: ["react-three-fiber", "Rapier"] }),
-      A('pfotenhafen', "Pfotenhafen", '#a16207', 'paw', "Im Dorf Sonnenwinkel 15 Tiere retten, pflegen und vermitteln. Futter wird in Gramm abgemessen.", {
-        who: "Am Computer",
-        features: ["15 Tiergeschichten in fünf Kapiteln", "Rechenrätsel zum Anfassen", "Spielstand exportieren und importieren"],
-        tags: ["Three.js"] }),
-      A('zoo', "Tierpark", '#65a30d', 'paw', "Einen Park ohne Käfige bauen, in den gerettete Tiere einziehen. Besucher spenden, damit wird mehr Land gekauft.", {
-        who: "Am Computer",
-        features: ["Gelände formen, Gehege und Wege bauen", "Fünf Rettungsgeschichten", "Zu Fuss durch den Park laufen und Tiere bürsten"],
-        tags: ["Three.js"] }),
-      A('10finger', "10 Finger Dojo", '#dc2626', 'keyboard', "Das Zehnfingersystem auf der Schweizer Tastatur, Gürtel für Gürtel vom weissen bis zum schwarzen.", {
-        who: "Am Computer",
-        features: ["Jede Tastengruppe: lernen, üben, Spiel, Prüfung", "Ab dem sechsten Streifen verschwindet die Bildschirmtastatur"],
-        tags: ["React", "TypeScript"] }),
-      A('floete', "Flöte", '#0891b2', 'flute', "Blockflöte lernen: Das Mikrofon hört den Ton, und ein Ballon steigt auf die Höhe der Note.", {
-        who: "Mit Blockflöte",
-        features: ["14 Lieder in vier Kapiteln, jedes wird zum Sternbild", "Ein falscher Ton setzt nichts zurück"],
-        tags: ["TypeScript", "Web Audio"] }),
-    ] },
-
-    { id: 'web', nav: 'Kleines', kicker: 'Kleine Seiten', title: 'Kleine Werkzeuge', sub: 'Einzelne Seiten ohne Server dahinter.', tiles: [
-      A('wuerfel', "Würfel", '#7c3aed', 'dice', "Punkteblock für das Würfelspiel 10'000: zwei Spieler an einem Handy, Eingabe in 50er-Schritten.", {
-        who: "Für den Spieleabend",
-        features: [],
-        tags: [] }),
-      A('fx', "FX", '#059669', 'swap', "Ein Betrag, beide Richtungen: Franken in Euro und Euro in Franken zum aktuellen Kurs.", {
-        who: "Werkzeug",
-        features: [],
-        tags: [] }),
     ] },
 
     { id: 'werkzeuge', nav: 'Werkzeuge', kicker: 'Für den Betrieb', title: 'Apps für die Plattform',
