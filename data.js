@@ -34,6 +34,10 @@ window.CASTILLO = {
         who: 'Für die ganze Familie',
         features: ['Ferienkonto pro Person und Jahr, Feiertage und Wochenenden zählen nicht', 'Brückentage, auch für beide Eltern gemeinsam', 'Jahreskalender mit Reisen, Feiertagen und Schulferien', 'Jede Reise mit Tagesplan, Packliste, To-dos und Ausgaben', 'Ein Reiseführer für den Zielort, geschrieben von einem Sprachmodell'],
         tags: ['Go', 'SQLite', 'ES-Module', 'SearXNG'] }),
+      A('fit', 'Fit', '#65a30d', 'fit', 'Tagesziele, Mahlzeiten und Gewicht in einer App. XP, Level und Serien belohnen jeden Tag, an dem die Ziele erreicht werden.', {
+        who: 'Training und Ernährung',
+        features: ['Tages-Check mit drei Ja-Nein-Fragen', 'Mahlzeiten mit einem Tipp aus Vorlagen, mit Kalorien und Protein', 'Gewicht gegen eine Planlinie bis zum Ziel', 'Schritte und Schlaf kommen aus Apple Health', 'Belohnungen, die man sich selbst für Etappenziele setzt'],
+        tags: ['Go', 'SQLite', 'React', 'Apple Health'] }),
       A('chat', 'Chat', '#7c3aed', 'chat', 'Ein KI-Chat für die Familie mit Websuche, Dateianhängen und einem Canvas zum Weiterbearbeiten. Jede Person sieht nur ihre eigenen Unterhaltungen.', {
         who: 'KI-Chat',
         features: ['Antworten laufen auf dem Server weiter, auch wenn das Handy schläft', 'Anhänge als Foto, PDF, Word, PowerPoint oder Code', 'Websuche über die eigene Suchmaschine, Quellen nummeriert', 'Tabellen, Formeln und Diagramme in der Antwort', 'Canvas neben dem Chat zum Bearbeiten und Herunterladen'],
