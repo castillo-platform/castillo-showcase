@@ -39,6 +39,24 @@
     bot: '<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16h5"/>',
     browser: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M6.5 6.5h.01M9 6.5h.01"/>',
     layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+    phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+    shield: '<path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/>',
+    git: '<circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="8" r="2.2"/><path d="M6 8.2v7.6M18 10.2c0 4-6 3-11 6"/>',
+    door: '<path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18"/><path d="M14.5 12h.01"/>',
+    grid: '<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',
+    plug: '<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/>',
+    cog: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+    box: '<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/>',
+    refresh: '<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/>',
+    key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M16 7l3 3M14 9l2 2"/>',
+    cloud: '<path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4-1.5A4.5 4.5 0 0 0 7 18z"/>',
+    lock: '<rect x="5" y="10" width="14" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    rocket: '<path d="M12 15c4-4 6-8 6-12-4 0-8 2-12 6l3 3zM9 12l-4 1 2-4M12 15l-1 4 4-2"/><circle cx="14" cy="9" r="1.2"/>',
+    tag: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.3"/>',
+    heart: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    server: '<rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/><path d="M8 7.5h.01M8 16.5h.01"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
     sparkle: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
   };
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ICONS.sparkle}</svg>`;
@@ -261,23 +279,116 @@
   // Animations that repaint stop while their section is off screen
   new IntersectionObserver(([e]) => $('#hero').classList.toggle('off', !e.isIntersecting)).observe($('#hero'));
 
-  // Platform
+  // Platform: figures, the architecture with its flows, the delivery conveyor and the stack
   const P = D.platform;
   $('#platform-lead').textContent = P.lead;
-  $('#arch').innerHTML = (P.arch || '') + `<ol class="zones">${(P.zones || []).map((z) => `
-    <li class="${z.home ? 'home' : ''}"><b>${esc(z.name)}</b><ul>${z.items.map(([t, d]) => `<li><span>${esc(t)}</span>${esc(d)}</li>`).join('')}</ul></li>`).join('')}</ol>`;
-  const archSvg = $('#arch svg');
-  if (archSvg) new IntersectionObserver(([e]) => (e.isIntersecting && !still ? archSvg.unpauseAnimations() : archSvg.pauseAnimations())).observe(archSvg);
-  $('#layers').innerHTML = P.layers.map((l) => `
-    <div class="layer reveal" style="--c:${l.color};--k:${P.layers.indexOf(l)}"><h4><i></i>${esc(l.name)}</h4>
-      <ul>${l.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-      <div class="tools">${(l.tools || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>`).join('');
+  $('#figs').innerHTML = P.figures.map((f, k) => `<div class="fig reveal" style="--c:${f.color};--k:${k}"><b data-n="${esc(f.n)}">${esc(f.n)}</b><span>${esc(f.label)}</span></div>`).join('');
+  document.querySelectorAll('.fig').forEach((el) => counted.observe(el));
 
-  // How it is built
+  // Architecture
+  const N = Object.fromEntries(P.nodes.map((n) => [n.id, n]));
+  const NW = 180, NH = 74;
+  const mid = (n) => [n.x + NW / 2, n.y + NH / 2];
+  const edgePath = ([a, b]) => {
+    if (P.routes?.[`${a}>${b}`]) return P.routes[`${a}>${b}`];
+    const A = N[a], B = N[b];
+    const [ax, ay] = mid(A), [bx, by] = mid(B);
+    // leave and enter on the facing sides
+    let x1, y1, x2, y2;
+    if (Math.abs(bx - ax) >= Math.abs(by - ay)) { x1 = ax + Math.sign(bx - ax) * NW / 2; y1 = ay; x2 = bx - Math.sign(bx - ax) * NW / 2; y2 = by; }
+    else { x1 = ax; y1 = ay + Math.sign(by - ay) * NH / 2; x2 = bx; y2 = by - Math.sign(by - ay) * NH / 2; }
+    const cx = (x1 + x2) / 2;
+    return Math.abs(y2 - y1) < 2 || Math.abs(x2 - x1) < 2 ? `M${x1} ${y1}L${x2} ${y2}` : (Math.abs(bx - ax) >= Math.abs(by - ay) ? `M${x1} ${y1}C${cx} ${y1} ${cx} ${y2} ${x2} ${y2}` : `M${x1} ${y1}C${x1} ${(y1 + y2) / 2} ${x2} ${(y1 + y2) / 2} ${x2} ${y2}`);
+  };
+  const ek = (e) => e.join('>');
+  const nodeSvg = (n) => `
+    <g class="anode${n.home ? ' home' : ''}${n.cloud ? ' cloud' : ''}" data-id="${n.id}" style="--c:${n.c}">
+      <rect x="${n.x}" y="${n.y}" width="${NW}" height="${NH}" rx="16"/>
+      <rect class="ic" x="${n.x + 14}" y="${n.y + 17}" width="40" height="40" rx="11"/>
+      <svg x="${n.x + 23}" y="${n.y + 26}" width="22" height="22" viewBox="0 0 24 24" class="ig">${ICONS[n.i] || ICONS.sparkle}</svg>
+      <text x="${n.x + 66}" y="${n.y + 33}" class="nt">${esc(n.t)}</text>
+      <text x="${n.x + 66}" y="${n.y + 53}" class="ns">${esc(n.s)}</text>
+    </g>`;
+  const flowBtns = P.flows.map((f, k) => `<button type="button" class="flow-btn${k ? '' : ' on'}" data-flow="${f.id}" style="--c:${f.c}"><i>${icon(f.i)}</i>${esc(f.t)}<span class="fbar"></span></button>`).join('');
+  $('#arch').innerHTML = `
+    <div class="viz-head"><h3>Architektur</h3><p>Ablauf wählen, der Weg leuchtet auf</p></div>
+    <div class="flows" role="tablist">${flowBtns}</div>
+    <div class="board">
+      <svg viewBox="0 0 1450 650" role="img" aria-label="Architektur von Castillo">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="context-stroke"/></marker></defs>
+        <rect class="homebox" x="545" y="20" width="685" height="510" rx="26"/>
+        <text x="566" y="46" class="hb">HEIMSERVER · K3S</text>
+        ${P.edges.map((e) => `<path class="aedge" data-e="${ek(e)}" d="${edgePath(e)}" marker-end="url(#ah)"/>`).join('')}
+        <g class="pkts"></g>
+        ${P.nodes.map(nodeSvg).join('')}
+      </svg>
+    </div>
+    <div class="flow-steps">${P.flows.map((f, k) => { const seq = [f.path[0][0], ...f.path.map((e) => e[1])]; return `<ol class="${k ? '' : 'on'}" data-flow="${f.id}" style="--c:${f.c}">${seq.map((id, j) => `<li style="--j:${j}"><i style="--nc:${N[id].c}">${icon(N[id].i)}</i><b>${esc(N[id].t)}</b><span>${esc(N[id].s)}</span></li>`).join('')}</ol>`; }).join('')}</div>
+    <div class="flow-caption">${P.flows.map((f, k) => `<p class="${k ? '' : 'on'}" data-flow="${f.id}">${esc(f.text)}</p>`).join('')}</div>`;
+  {
+    const board = $('#arch'), svg = $('#arch .board svg'), pk = $('#arch .pkts');
+    let fi = 0, ftimer = 0, fheld = false, fseen = false;
+    const showFlow = (k) => {
+      fi = (k + P.flows.length) % P.flows.length;
+      const f = P.flows[fi];
+      const on = new Set(f.path.map(ek)), nodes = new Set(f.path.flat());
+      board.style.setProperty('--fc', f.c);
+      board.querySelectorAll('.flow-btn').forEach((b, j) => b.classList.toggle('on', j === fi));
+      board.querySelectorAll('.flow-caption p, .flow-steps ol').forEach((p) => p.classList.toggle('on', p.dataset.flow === f.id));
+      svg.querySelectorAll('.aedge').forEach((e) => e.classList.toggle('on', on.has(e.dataset.e)));
+      svg.querySelectorAll('.anode').forEach((n) => { n.classList.toggle('on', nodes.has(n.dataset.id)); n.classList.toggle('off', !nodes.has(n.dataset.id)); });
+      // packets travel the path one hop after another
+      pk.innerHTML = f.path.map((e, j) => { const begin = `${(j * 0.55).toFixed(2)}s;pk${fi}.end+${(j * 0.55).toFixed(2)}s`; return `<circle r="6" class="pkt" visibility="hidden"><set attributeName="visibility" to="visible" begin="${begin}"/><animateMotion dur="1.1s" begin="${begin}" repeatCount="1" fill="freeze" path="${edgePath(e)}" ${j === f.path.length - 1 ? `id="pk${fi}"` : ''}/></circle>`; }).join('');
+      try { svg.setCurrentTime(0); } catch {}
+    };
+    const ftick = () => { clearTimeout(ftimer); board.classList.toggle('playing', fseen && !fheld && !still); if (fseen && !fheld && !still) ftimer = setTimeout(() => { showFlow(fi + 1); ftick(); }, 6000); };
+    board.querySelectorAll('.flow-btn').forEach((b, j) => b.addEventListener('click', () => { fheld = true; showFlow(j); ftick(); }));
+    new IntersectionObserver(([e]) => { fseen = e.isIntersecting; if (fseen && !still) svg.unpauseAnimations(); else svg.pauseAnimations(); ftick(); }, { threshold: 0.3 }).observe(board);
+    showFlow(0);
+  }
+
+  // Delivery conveyor
+  $('#pipeline').innerHTML = `
+    <div class="viz-head"><h3>Von Push bis Produktion</h3><p>ohne GitHub Actions, alles im eigenen Cluster</p></div>
+    <div class="conveyor">
+      <div class="belt"><span class="token"></span></div>
+      ${P.pipeline.map((st, k) => `<div class="stage" style="--k:${k}"><i>${icon(st.i)}</i><b>${esc(st.t)}</b><span>${esc(st.s)}</span><em>${icon('check')}</em></div>`).join('')}
+    </div>`;
+
+  // Stack, built from the ground up; the cloud services beside it
+  const appIcons = D.groups.flatMap((g) => [...(g.apps || []), ...(g.games || [])]).map((a) => `<span class="ai" style="--c:${a.color}" title="${esc(a.name)}">${icon(a.icon)}</span>`).join('');
+  $('#stack').innerHTML = `
+    <div class="viz-head"><h3>Der Stapel</h3><p>vom Mini-PC bis zur App, daneben was aus der Cloud kommt</p></div>
+    <div class="stack-grid">
+      <div class="stack">${[...P.stack].reverse().map((l, k, arr) => `
+        <div class="band" style="--c:${l.c};--k:${arr.length - 1 - k}">
+          <div class="bl"><i>${icon(l.i)}</i><b>${esc(l.t)}</b></div>
+          <div class="bt">${l.apps ? appIcons : l.tools.map((t) => `<span>${esc(t)}</span>`).join('')}</div>
+        </div>`).join('')}</div>
+      <div class="cloudcol">${P.cloud.map((c, k) => `<div class="cl" style="--c:${c.c};--k:${k}"><i>${icon(c.i)}</i><b>${esc(c.t)}</b><span>${esc(c.s)}</span></div>`).join('')}</div>
+    </div>`;
+
+  // How it is built: the loop of a change around the owner
   const H = D.how;
   $('#how-lead').textContent = H.lead;
-  $('#how').innerHTML = H.cards.map((c, k) => `<div class="card reveal" style="--k:${k};${c.color ? `--c:${c.color}` : ''}">${c.big ? `<span class="big">${esc(c.big)}</span>` : ''}<b>${esc(c.title)}</b><p>${esc(c.text)}</p></div>`).join('');
-  $('#timeline').innerHTML = (H.timeline || []).map((t) => `<li class="reveal"><time>${esc(t.date)}</time><span>${esc(t.text)}</span></li>`).join('');
+  {
+    const L = H.loop, R0 = 210, cx = 300, cy = 270;
+    const pos = (k) => { const a = -Math.PI / 2 + (k / L.length) * Math.PI * 2; return [cx + R0 * Math.cos(a), cy + R0 * Math.sin(a)]; };
+    const ring = `M${cx} ${cy - R0}A${R0} ${R0} 0 1 1 ${cx - 0.01} ${cy - R0}`;
+    const dur = 14;
+    $('#loop').innerHTML = `
+      <div class="loop">
+        <svg viewBox="0 0 600 540" role="img" aria-label="Der Weg einer Änderung">
+          <path d="${ring}" class="ring"/>
+          <path d="${ring}" class="ring-run" pathLength="100"/>
+          <circle r="9" class="orb"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${ring}"/></circle>
+          <text x="${cx}" y="${cy - 8}" class="lc1" text-anchor="middle">Eine Änderung</text>
+          <text x="${cx}" y="${cy + 22}" class="lc2" text-anchor="middle">einmal rundherum</text>
+        </svg>
+        ${L.map((n, k) => { const [x, y] = pos(k); return `<div class="lnode" style="--c:${n.c};--x:${(x / 6).toFixed(2)}%;--y:${(y / 5.4).toFixed(2)}%;--d:${(k / L.length * dur).toFixed(2)}s;--dur:${dur}s"><i>${icon(n.i)}</i><b>${esc(n.t)}</b><span>${esc(n.s)}</span></div>`; }).join('')}
+      </div>
+      <div class="loop-figs">${H.cards.map((c, k) => `<div class="fig reveal" style="--c:${c.color};--k:${k}"><b>${esc(c.big)}</b><span>${esc(c.title)}</span></div>`).join('')}</div>`;
+  }
 
   // Commits per day: one bar a day, milestone days in amber with a dot, bars grow when seen
   const C = H.commits || [];
@@ -321,22 +432,8 @@
     plot.addEventListener('pointerleave', hideTip);
   }
 
-  // Timeline: the line fills and the dots light up as it scrolls past
-  const tl = $('#timeline');
-  const drawTimeline = () => {
-    const r = tl.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, (innerHeight * 0.75 - r.top) / r.height));
-    const tops = [...tl.querySelectorAll('li')].map((li) => [li, li.getBoundingClientRect().top]);
-    tl.style.setProperty('--p', p.toFixed(3));
-    tops.forEach(([li, t]) => li.classList.toggle('on', t < innerHeight * 0.75));
-  };
-  let tlOn = false, tlTick = false;
-  new IntersectionObserver(([e]) => { tlOn = e.isIntersecting; if (tlOn) drawTimeline(); }).observe(tl);
-  addEventListener('scroll', () => {
-    if (!tlOn || tlTick) return;
-    tlTick = true;
-    requestAnimationFrame(() => { drawTimeline(); tlTick = false; });
-  }, { passive: true });
+  // Milestones: short cards in a row
+  $('#timeline').innerHTML = (H.timeline || []).map((t, k) => `<div class="ms-card reveal" style="--k:${k}"><i>${icon(t.i)}</i><time>${esc(t.date.slice(0, 6))}</time><b>${esc(t.short)}</b></div>`).join('');
 
   // Nav chips, highlighted while their section is on screen
   const sections = [...D.groups.map((g) => ({ id: g.id, label: g.nav })), { id: 'plattform', label: 'Plattform' }, { id: 'arbeitsweise', label: 'Arbeitsweise' }];

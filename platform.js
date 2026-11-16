@@ -1,122 +1,114 @@
-// The platform and how it is built: text, the architecture drawing and the timeline. Public-safe:
-// no hostnames, domains, people, accounts or figures beyond counts of things in the repos.
+// The platform and how it is built, as data for the drawings in app.js. Public-safe: no hostnames,
+// domains, people or accounts; figures are counts of things in the repos.
 window.CASTILLO_PLATFORM = {
   platform: {
-    lead: 'Ein Mini-PC zu Hause, ohne offene Ports nach aussen. Darauf läuft Kubernetes, und alles vom Betriebssystem bis zur letzten App steht als Code in Git. Nach einem Push baut und prüft die eigene CI die neue Version und liefert sie selbst aus.',
-    layers: [
-      { name: 'Hardware und Host', color: '#f2a93b', points: ['Ein Mini-PC: 6 Kerne, 24 GB RAM, keine GPU, Ubuntu', 'Keine offenen Ports, erreichbar nur über einen ausgehenden Tunnel', 'Jeder Baustein des Hosts ist eine „Unit“ mit gepinnter Version, Trockenlauf mit Diff und automatischem Rollback', 'Host-Updates kommen als Pull Request'], tools: ['Ansible', 'Renovate', 'code-server'] },
-      { name: 'Kubernetes', color: '#4f8df5', points: ['K3s mit einem Knoten, Ingress nur intern', 'Sicherheit per nativer Admission Policy: non-root, Seccomp, keine Rechte-Eskalation', 'Scale to zero: selten genutzte Dienste starten beim ersten Aufruf und schlafen im Leerlauf', 'Eigene Registry, eigener S3-Speicher, Wildcard-TLS'], tools: ['K3s', 'Traefik', 'cert-manager', 'Garage', 'Zot'] },
-      { name: 'GitOps', color: '#2fb380', points: ['Jede Komponente ist genau ein Helm-Chart und ein HelmRelease', 'App-of-Apps-Repo legt Quellen, Namespaces, Policies und Backups an', 'Push statt Polling: Webhooks lösen den Abgleich aus', 'Rollout-Status erscheint direkt am Commit'], tools: ['Flux CD', 'Helm', 'OpenTofu'] },
-      { name: 'CI/CD ohne GitHub Actions', color: '#e8603c', points: ['Pipelines laufen im eigenen Cluster, ausgelöst per Webhook', 'Jeder Pull Request bekommt einen Check, jeder Merge erzeugt automatisch ein Release', 'Die Auslieferung wartet, bis die neue Version gesund läuft, und rollt sonst zurück', 'Wöchentlicher Update-Zug: KI-Agenten aktualisieren, prüfen und verifizieren'], tools: ['Argo Workflows', 'Argo Events', 'BuildKit', 'Renovate'] },
-      { name: 'Zugang und Identität', color: '#9b7bea', points: ['Standardmässig ist alles zu, jede App braucht eine eigene Freigabe', 'Apps prüfen die Anmeldung zusätzlich selbst', 'Ein Verzeichnis kennt Personen, Familien und Gruppen', 'Daten gehören einer Person und werden nur nach ausdrücklicher Freigabe geteilt'], tools: ['Cloudflare Tunnel', 'Cloudflare Access', 'Directory'] },
-      { name: 'Secrets', color: '#d4a017', points: ['Eine einzige Quelle für alle Secrets', 'Kein Secret in Git, im Wissensspeicher oder im Chat', 'Secret-Scan vor jedem automatischen Commit', 'Agenten haben eine eigene, eingeschränkte Rolle'], tools: ['Akeyless', 'External Secrets'] },
-      { name: 'Beobachten und Absichern', color: '#e0477c', points: ['Logs, Events und Metriken in der Cloud', 'Eigene Console zeigt Dienste, Host-Units und Updates', 'Täglicher Scan aller Images mit SBOM und Ausnutzungswahrscheinlichkeit (EPSS)', 'Monatlicher Konfigurations-Check nach CIS'], tools: ['Grafana Alloy', 'Grafana Cloud', 'Trivy', 'kube-bench', 'Lynis'] },
-      { name: 'Backups', color: '#22a6b3', points: ['Täglich (7 Tage) und wöchentlich (4 Wochen) in einen Cloud-Bucket', 'Neue Apps bekommen den Plan automatisch', 'Fast jede App speichert in einer SQLite-Datei, ein Restore ist eine Datei'], tools: ['Velero', 'Kopia', 'SQLite'] },
-      { name: 'KI für Apps und Agenten', color: '#5b6cf0', points: ['Ein LLM-Gateway: eigener Schlüssel, Budget und Limit pro App', 'Ein MCP-Endpunkt bündelt die Werkzeuge der Apps für KI-Assistenten', 'Ein echter Browser als Werkzeug', 'Jede Schreibaktion eines Agenten lässt sich rückgängig machen'], tools: ['GoModel', 'ToolHive', 'Cedar', 'Camoufox'] },
-      { name: 'app-foundation', color: '#14a38b', points: ['Kleines Go-Toolkit statt Framework: Zugang, Identität, SQLite, Server, LLM, Push', '15 Frontend-Module ohne eigene Optik, jede App behält ihr Aussehen', 'Ein Scaffold erzeugt eine neue App samt CI und Helm-Chart'], tools: ['Go', 'React', 'Vite', 'TypeScript', 'TanStack Query'] },
+    lead: 'Ein Mini-PC zu Hause, ohne offene Ports. Alles vom Betriebssystem bis zur App steht als Code in Git.',
+
+    // Figures that need no sentence
+    figures: [
+      { n: '0', label: 'offene Ports', color: '#e8603c' },
+      { n: '1', label: 'Knoten, 6 Kerne, 24 GB', color: '#f2a93b' },
+      { n: '36', label: 'Bausteine der Plattform', color: '#4f8df5' },
+      { n: '0', label: 'GitHub Actions', color: '#2fb380' },
+      { n: '2', label: 'Backups: täglich, wöchentlich', color: '#22a6b3' },
+      { n: '15', label: 'geteilte UI-Module', color: '#9b7bea' },
+    ],
+
+    // Architecture: nodes on a 1200 x 640 board, edges between them, flows that light a path.
+    nodes: [
+      { id: 'family', x: 20, y: 40, t: 'Familie', s: 'Handy + iPad', i: 'phone', c: '#f2a93b' },
+      { id: 'ai', x: 20, y: 160, t: 'KI-Assistent', s: 'als MCP-Client', i: 'sparkle', c: '#5b6cf0' },
+      { id: 'dev', x: 20, y: 330, t: 'Owner + Agenten', s: 'Claude Code', i: 'bot', c: '#2fb380' },
+      { id: 'cf', x: 280, y: 95, t: 'Cloudflare', s: 'Tunnel + Login', i: 'shield', c: '#9b7bea' },
+      { id: 'gh', x: 280, y: 330, t: 'GitHub', s: 'Code + Releases', i: 'git', c: '#1d2433' },
+      { id: 'traefik', x: 565, y: 60, t: 'Traefik', s: 'Eingang', i: 'door', c: '#4f8df5', home: true },
+      { id: 'apps', x: 795, y: 60, t: 'Apps', s: 'Go + React', i: 'grid', c: '#f2a93b', home: true },
+      { id: 'dir', x: 1025, y: 60, t: 'Directory', s: 'Wer ist wer', i: 'users', c: '#9b7bea', home: true },
+      { id: 'mcp', x: 565, y: 180, t: 'MCP-Server', s: 'Werkzeuge', i: 'plug', c: '#5b6cf0', home: true },
+      { id: 'llm', x: 795, y: 180, t: 'LLM-Gateway', s: 'Budget pro App', i: 'sparkle', c: '#5b6cf0', home: true },
+      { id: 'ci', x: 565, y: 300, t: 'CI', s: 'Argo + BuildKit', i: 'cog', c: '#e8603c', home: true },
+      { id: 'zot', x: 795, y: 300, t: 'Registry', s: 'Images + Charts', i: 'box', c: '#4f8df5', home: true },
+      { id: 'flux', x: 1025, y: 300, t: 'Flux', s: 'GitOps', i: 'refresh', c: '#2fb380', home: true },
+      { id: 'eso', x: 795, y: 420, t: 'Secrets', s: 'External Secrets', i: 'key', c: '#d4a017', home: true },
+      { id: 'ops', x: 1025, y: 420, t: 'Betrieb', s: 'Backup + Logs', i: 'chart', c: '#22a6b3', home: true },
+      { id: 'models', x: 1250, y: 180, t: 'Modelle', s: 'in der Cloud', i: 'cloud', c: '#5b6cf0', cloud: true },
+      { id: 'backup', x: 1250, y: 420, t: 'Grafana + S3', s: 'Logs, Backups', i: 'cloud', c: '#22a6b3', cloud: true },
+      { id: 'akeyless', x: 795, y: 556, t: 'Akeyless', s: 'Secret-Quelle', i: 'lock', c: '#d4a017', cloud: true },
+    ],
+    edges: [
+      ['family', 'cf'], ['ai', 'cf'], ['cf', 'traefik'], ['traefik', 'apps'], ['apps', 'dir'],
+      ['cf', 'mcp'], ['mcp', 'apps'], ['apps', 'llm'], ['llm', 'models'],
+      ['dev', 'gh'], ['gh', 'ci'], ['ci', 'zot'], ['zot', 'flux'], ['flux', 'apps'],
+      ['akeyless', 'eso'], ['eso', 'apps'], ['apps', 'ops'], ['ops', 'backup'],
+    ],
+    // Hand-laid routes through the gaps between the columns, so no line crosses a box
+    routes: {
+      'eso>apps': 'M795 457H782Q770 457 770 445V122Q770 97 782 97H795',
+      'flux>apps': 'M1025 337H1012Q992 337 992 317V125Q992 112 980 112H975',
+      'apps>ops': 'M975 82H995Q1008 82 1008 95V440Q1008 457 1016 457H1025',
+      'mcp>apps': 'M745 217H755Q762 217 762 205V128Q762 118 772 118H795',
+    },
+    flows: [
+      { id: 'request', t: 'Aufruf einer App', i: 'phone', c: '#f2a93b', path: [['family', 'cf'], ['cf', 'traefik'], ['traefik', 'apps'], ['apps', 'dir']], text: 'Die Anmeldung prüft Cloudflare, der Tunnel bringt die Anfrage nach Hause, die App fragt Directory, wer das ist.' },
+      { id: 'deploy', t: 'Neue Version', i: 'rocket', c: '#e8603c', path: [['dev', 'gh'], ['gh', 'ci'], ['ci', 'zot'], ['zot', 'flux'], ['flux', 'apps']], text: 'Ein Push startet die eigene CI. Sie baut, prüft, erstellt ein Release, und Flux rollt es aus.' },
+      { id: 'ai', t: 'KI-Assistent', i: 'sparkle', c: '#5b6cf0', path: [['ai', 'cf'], ['cf', 'mcp'], ['mcp', 'apps'], ['apps', 'llm'], ['llm', 'models']], text: 'Ein Assistent nutzt die Werkzeuge der Apps über einen MCP-Endpunkt; Apps erreichen Modelle nur über das Gateway.' },
+      { id: 'safe', t: 'Secrets & Backup', i: 'key', c: '#22a6b3', path: [['akeyless', 'eso'], ['eso', 'apps'], ['apps', 'ops'], ['ops', 'backup']], text: 'Secrets kommen nur aus Akeyless. Logs und Backups gehen täglich in die Cloud.' },
+    ],
+
+    // Delivery as a conveyor
+    pipeline: [
+      { t: 'Push', s: 'Webhook', i: 'git' },
+      { t: 'Prüfen', s: 'Tests im Build', i: 'check' },
+      { t: 'Release', s: 'Version aus dem Commit', i: 'tag' },
+      { t: 'Ausliefern', s: 'Flux', i: 'refresh' },
+      { t: 'Läuft', s: 'sonst Rollback', i: 'heart' },
+    ],
+
+    // The stack, from the ground up; the top band shows the apps themselves
+    stack: [
+      { t: 'Mini-PC', i: 'server', c: '#f2a93b', tools: ['Ubuntu', 'Ansible', 'Renovate'] },
+      { t: 'Kubernetes', i: 'box', c: '#4f8df5', tools: ['K3s', 'Traefik', 'cert-manager', 'Garage', 'Zot'] },
+      { t: 'Plattform', i: 'cog', c: '#2fb380', tools: ['Flux', 'Argo Workflows', 'BuildKit', 'External Secrets', 'Velero', 'Grafana Alloy', 'LLM-Gateway', 'ToolHive'] },
+      { t: 'app-foundation', i: 'layers', c: '#14a38b', tools: ['Go', 'React', 'Vite', 'TypeScript', 'SQLite'] },
+      { t: 'Apps', i: 'grid', c: '#e0477c', apps: true },
+    ],
+    cloud: [
+      { t: 'Cloudflare', s: 'Tunnel, Anmeldung', i: 'shield', c: '#9b7bea' },
+      { t: 'GitHub', s: 'Code', i: 'git', c: '#1d2433' },
+      { t: 'Akeyless', s: 'Secrets', i: 'lock', c: '#d4a017' },
+      { t: 'Grafana Cloud', s: 'Logs, Metriken', i: 'chart', c: '#22a6b3' },
     ],
   },
+
   how: {
-    lead: 'Code, Konfiguration und Betrieb erledigen zum grössten Teil KI-Coding-Agenten. Der Owner gibt die Aufgaben, prüft die Ergebnisse und entscheidet, oft vom Handy aus.',
+    lead: 'Den grössten Teil von Code und Betrieb erledigen KI-Agenten. Der Owner gibt Aufgaben und entscheidet.',
+    // The loop of a change, clockwise from the owner
+    loop: [
+      { t: 'Owner', s: 'Aufgabe, oft vom Handy', i: 'user', c: '#f2a93b' },
+      { t: 'Agenten', s: 'Claude Code', i: 'bot', c: '#2fb380' },
+      { t: 'Skills + Brain', s: '16 Skills, 18 Seiten', i: 'book', c: '#5b6cf0' },
+      { t: 'Pull Request', s: 'mit Check', i: 'git', c: '#1d2433' },
+      { t: 'CI + Release', s: 'ohne GitHub Actions', i: 'cog', c: '#e8603c' },
+      { t: 'Produktion', s: 'Rollout oder Rollback', i: 'rocket', c: '#4f8df5' },
+      { t: 'Bot im Chat', s: 'meldet, merged nie', i: 'chat', c: '#e0477c' },
+    ],
     cards: [
-      { big: '16', title: 'Skills', text: 'Schritt-für-Schritt-Anleitungen für Agenten: neue App anlegen, CI-Fehler untersuchen, Produktion prüfen, Review.', color: '#5b6cf0' },
-      { big: '18', title: 'Seiten im „Brain“', text: 'Ein Wissensspeicher als Markdown in Git. Hooks schlagen zu jeder Frage passende Seiten vor, nachts konsolidiert ein „Dream“-Lauf.', color: '#2fb380' },
-      { big: '1', title: 'Plattform-Bot', text: 'Arbeitet im Gruppenchat und auf GitHub mit, liest Code und Checks und schlägt Änderungen als Entwurf vor. Mergen darf er nicht.', color: '#e8603c' },
-      { big: '2', title: 'Plattformen, ein Upstream', text: 'Neutrale Apps und Bausteine werden mit einer befreundeten Plattform geteilt. Jede betreibt daraus ihre eigene Instanz.', color: '#f2a93b' },
-      { big: '2’382', title: 'Commits in drei Wochen', text: 'Vom 28. Oktober bis 16. November über alle Repos beider Organisationen, von Menschen, Agenten und Bot zusammen.', color: '#e0477c' },
-      { big: '0', title: 'GitHub Actions', text: 'Prüfen, Releasen und Ausliefern laufen über Webhooks in der eigenen CI, mit Meldungen und Knöpfen im Chat.', color: '#4f8df5' },
+      { big: '16', title: 'Skills', color: '#5b6cf0' },
+      { big: '18', title: 'Seiten im Brain', color: '#2fb380' },
+      { big: '2’382', title: 'Commits in drei Wochen', color: '#e0477c' },
+      { big: '2', title: 'Plattformen, ein Upstream', color: '#f2a93b' },
     ],
     // Commits per day over every repo of both organisations, each commit counted once (git log, 2026-11-17).
     commits: [["2026-10-28", 152], ["2026-10-29", 84], ["2026-10-30", 50], ["2026-10-31", 359], ["2026-11-01", 318], ["2026-11-02", 61], ["2026-11-03", 1], ["2026-11-04", 11], ["2026-11-05", 0], ["2026-11-06", 13], ["2026-11-07", 149], ["2026-11-08", 89], ["2026-11-09", 111], ["2026-11-10", 47], ["2026-11-11", 37], ["2026-11-12", 486], ["2026-11-13", 155], ["2026-11-14", 103], ["2026-11-15", 34], ["2026-11-16", 122]],
     timeline: [
-      { date: '28.10.2026', text: 'Castillo entsteht aus der Codebasis einer befreundeten Plattform, mit eigener Organisation und eigenem Server.' },
-      { date: '31.10.2026', text: 'Der gemeinsame Upstream startet mit geteilten Charts sowie Directory, Console, Paper und Memory. Die erste Kinder-App geht live.' },
-      { date: '01.11.2026', text: 'Das erste 3D-Spiel für die Kinder.' },
-      { date: '07.11.2026', text: 'Weitere Familien-Apps: Spiele, To-dos, Ferienplanung.' },
-      { date: '11.11.2026', text: 'Das „Brain“: ein Wissensspeicher in Git, aus dem die Agenten zu jeder Aufgabe die passenden Seiten erhalten.' },
-      { date: '12.11.2026', text: 'Keine GitHub Actions mehr: Prüfen und Ausliefern übernimmt die eigene CI. Der Plattform-Bot geht live.' },
-      { date: '13.11.2026', text: 'Eine neue App geht vom Scaffold bis in die Produktion am selben Tag.' },
-      { date: '14.11.2026', text: 'Das Brain schreibt selbst nach, was eine Session gelernt hat, und räumt jede Nacht auf.' },
-      { date: '16.11.2026', text: 'Stand dieser Seite: 36 Bausteine der Plattform und 20 Apps.' },
+      { date: '28.10.2026', short: 'Castillo startet', i: 'castle', text: 'Castillo entsteht aus der Codebasis einer befreundeten Plattform, mit eigener Organisation und eigenem Server.' },
+      { date: '31.10.2026', short: 'Gemeinsamer Upstream', i: 'git', text: 'Der gemeinsame Upstream startet mit Directory, Console, Paper und Memory. Die erste Kinder-App geht live.' },
+      { date: '01.11.2026', short: 'Erstes 3D-Spiel', i: 'car', text: 'Das erste 3D-Spiel für die Kinder.' },
+      { date: '07.11.2026', short: 'Familien-Apps', i: 'check', text: 'Weitere Familien-Apps: Spiele, To-dos, Ferienplanung.' },
+      { date: '11.11.2026', short: 'Das Brain', i: 'book', text: 'Ein Wissensspeicher in Git, aus dem die Agenten zu jeder Aufgabe die passenden Seiten erhalten.' },
+      { date: '12.11.2026', short: 'Eigene CI, Bot live', i: 'rocket', text: 'Keine GitHub Actions mehr: Prüfen und Ausliefern übernimmt die eigene CI. Der Plattform-Bot geht live.' },
+      { date: '13.11.2026', short: 'App an einem Tag', i: 'sparkle', text: 'Eine neue App geht vom Scaffold bis in die Produktion am selben Tag.' },
+      { date: '14.11.2026', short: 'Brain lernt selbst', i: 'brain', text: 'Das Brain schreibt selbst nach, was eine Session gelernt hat, und räumt jede Nacht auf.' },
     ],
   },
 };
-
-// The architecture: who talks to whom. Drawn for a dark section; boxes carry the layer colours.
-window.CASTILLO_PLATFORM.platform.arch = (() => {
-  const box = (x, y, w, h, title, sub, c, opts = {}) => `
-    <g class="node" style="--k:${(x * 7 + y * 3) % 23}">
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${opts.fill || '#fbf9f5'}" stroke="${opts.stroke || '#e3dccf'}" ${opts.dash ? 'stroke-dasharray="6 6"' : ''}/>
-      ${c ? `<rect x="${x + 16}" y="${y + 18}" width="10" height="10" rx="3" fill="${c}"/>` : ''}
-      <text x="${x + (c ? 34 : 16)}" y="${y + 28}" class="arch-t">${title}</text>
-      ${sub ? `<text x="${x + 16}" y="${y + 50}" class="arch-s">${sub}</text>` : ''}
-    </g>`;
-  let n = 0;
-  const arrow = (d, label, lx, ly, opts = {}) => `
-    <path d="${d}" fill="none" stroke="${opts.c || '#7d8aa3'}" stroke-width="1.6" ${opts.dash ? 'stroke-dasharray="5 5"' : ''} marker-end="url(#ah)"/>
-    <circle r="${opts.dash ? 2.5 : 3.5}" fill="${opts.dash ? '#9aa6ba' : '#e8890c'}" class="pkt"><animateMotion dur="${(1.6 + (n++ % 5) * 0.35).toFixed(2)}s" begin="${((n * 0.37) % 2).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>
-    ${label ? `<text x="${lx}" y="${ly}" class="arch-l" text-anchor="${opts.anchor || 'middle'}">${label}</text>` : ''}`;
-  return `
-  <svg viewBox="0 0 1200 660" role="img" aria-label="Architektur von Castillo">
-    <style>
-      .arch-t { font: 600 16px Geist, system-ui, sans-serif; fill: #1d2433; }
-      .arch-s { font: 400 14px Geist, system-ui, sans-serif; fill: #5b6372; }
-      .arch-l { font: 500 13px 'Geist Mono', ui-monospace, monospace; fill: #6b7383; }
-      .arch-h { font: 700 14px 'Geist Mono', ui-monospace, monospace; fill: #b4690e; letter-spacing: .08em; }
-    </style>
-    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7d8aa3"/></marker></defs>
-
-    ${box(20, 30, 230, 64, 'Familie', 'Handy und Browser', '#f2a93b')}
-    ${box(20, 120, 230, 64, 'KI-Assistenten', 'als MCP-Client', '#5b6cf0')}
-    ${box(20, 250, 230, 64, 'Mensch + Agenten', 'Claude Code, Skills, Brain', '#2fb380')}
-    ${box(20, 340, 230, 64, 'Gruppenchat', 'Meldungen und Knöpfe', '#e8603c')}
-
-    ${box(310, 70, 200, 80, 'Cloudflare', 'Tunnel + Access', '#9b7bea')}
-    ${box(310, 270, 200, 112, 'GitHub', 'Upstream + Castillo', '#1d2433')}
-    <text x="326" y="356" class="arch-s">PRs · Releases</text><text x="326" y="374" class="arch-s">Deployments</text>
-
-    <rect x="570" y="20" width="610" height="460" rx="22" fill="none" stroke="#f2a93b" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/>
-    <text x="594" y="50" class="arch-h">HEIMSERVER · K3S</text>
-    ${box(594, 70, 170, 64, 'Traefik', 'Ingress', '#4f8df5')}
-    ${box(790, 70, 366, 64, 'Apps', 'rund 20 · Go + SQLite + React-PWA', '#f2a93b', { fill: '#fff4dc', stroke: '#f2d39b' })}
-    ${box(594, 160, 170, 64, 'Directory', 'Wer ist wer?', '#9b7bea')}
-    ${box(790, 160, 175, 64, 'LLM-Gateway', '→ Cloud-Modelle', '#5b6cf0')}
-    ${box(981, 160, 175, 64, 'MCP-Server', 'Werkzeuge + Browser', '#5b6cf0')}
-    ${box(594, 270, 170, 64, 'CI', 'Argo + BuildKit', '#e8603c')}
-    ${box(790, 270, 175, 64, 'Registry', 'Images + Charts', '#4f8df5')}
-    ${box(981, 270, 175, 64, 'Flux CD', 'GitOps', '#2fb380')}
-    ${box(594, 380, 170, 64, 'Plattform-Bot', 'Chat + GitHub', '#e8603c')}
-    ${box(790, 380, 175, 64, 'Secrets', 'External Secrets', '#d4a017')}
-    ${box(981, 380, 175, 64, 'Betrieb', 'Backup · Logs · Scan', '#22a6b3')}
-
-    ${box(790, 540, 175, 64, 'Akeyless', 'Secrets', '#d4a017', { dash: true })}
-    ${box(981, 540, 175, 64, 'Grafana + S3', 'Logs · Backups', '#22a6b3', { dash: true })}
-
-    ${arrow('M250 62 C 280 62, 280 100, 306 104', '', 0, 0)}
-    ${arrow('M250 152 C 280 152, 280 124, 306 120', '', 0, 0)}
-    ${arrow('M510 102 L 590 102', 'Tunnel', 550, 88)}
-    ${arrow('M764 102 L 786 102', '', 0, 0)}
-    ${arrow('M890 134 L 890 156', '', 0, 0)}
-    ${arrow('M700 134 C 700 146, 690 148, 690 156', '', 0, 0)}
-    ${arrow('M1068 156 L 1068 138', '', 0, 0)}
-    ${arrow('M250 282 L 306 300', 'PR', 276, 280)}
-    ${arrow('M510 302 L 590 302', 'Webhook', 550, 294)}
-    ${arrow('M764 302 L 786 302', '', 0, 0)}
-    ${arrow('M981 302 L 969 302', '', 0, 0)}
-    ${arrow('M1068 270 L 1068 228', 'rollt aus', 1100, 252, { anchor: 'start' })}
-    ${arrow('M594 330 C 540 360, 540 370, 514 360', 'Release', 548, 384)}
-    ${arrow('M594 412 C 400 450, 300 420, 254 380', '', 0, 0)}
-    ${arrow('M679 224 C 679 250, 520 250, 512 140', '', 0, 0, { dash: true })}
-    <text x="512" y="244" class="arch-l">gleicht</text><text x="512" y="260" class="arch-l">Access ab</text>
-    ${arrow('M877 540 L 877 448', 'Secrets', 887, 500, { dash: true, anchor: 'start' })}
-    ${arrow('M1068 448 L 1068 536', 'Logs · Backups', 1078, 500, { dash: true, anchor: 'start' })}
-  </svg>`;
-})();
-
-// The same architecture for narrow screens: four zones from outside to inside, read top to bottom.
-window.CASTILLO_PLATFORM.platform.zones = [
-  { name: 'Draussen', items: [['Familie', 'Handy und Browser'], ['KI-Assistenten', 'als MCP-Client'], ['Mensch und Agenten', 'Claude Code, Skills, Brain'], ['Gruppenchat', 'Meldungen und Knöpfe']] },
-  { name: 'Am Rand', items: [['Cloudflare', 'Tunnel und Anmeldung'], ['GitHub', 'Pull Requests, Releases, Deployments']] },
-  { name: 'Heimserver · K3s', home: true, items: [['Traefik', 'leitet jede Anfrage an ihre App'], ['Apps', 'Go, SQLite und React'], ['Directory', 'wer ist wer'], ['LLM-Gateway', 'Schlüssel und Budgets'], ['MCP-Server', 'Werkzeuge und Browser'], ['CI', 'Argo und BuildKit'], ['Registry', 'Images und Charts'], ['Flux CD', 'rollt aus'], ['Plattform-Bot', 'Chat und GitHub'], ['Secrets', 'External Secrets'], ['Betrieb', 'Backup, Logs, Scans']] },
-  { name: 'In der Cloud', items: [['Cloud-Modelle', 'hinter dem Gateway'], ['Akeyless', 'Secrets'], ['Grafana und S3', 'Logs und Backups']] },
-];
