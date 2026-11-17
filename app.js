@@ -63,7 +63,7 @@
 
   // Every screenshot in page order, for the lightbox's previous/next.
   const gallery = [];
-  // Stats: count up once they are on screen
+  // Figures count up once they are on screen
   // A group with nothing to show is left out, in the sections and in the nav
   D.groups = D.groups.filter((g) => (g.apps || []).length + (g.games || []).length + (g.tiles || []).length > 0);
   // Figures that describe the page come from the page's own data
@@ -94,7 +94,7 @@
   const back = [...apps].reverse();
   $('#marquee2').innerHTML = back.map(chip).join('') + back.map(chip).join('');
 
-  // Stars: a seeded sky, so it looks the same on every visit
+  // A seeded random, so the sky and the castle look the same on every visit
   let seed = 7;
   const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
   // Clouds in three depths and a few birds; seeded, so the sky looks the same on every visit
@@ -173,7 +173,7 @@
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let ticking = false;
   addEventListener('scroll', () => {
-    if (still || ticking) return;
+    if (still || ticking || $('#hero').classList.contains('off')) return;
     ticking = true;
     requestAnimationFrame(() => {
       const y = Math.min(scrollY, innerHeight * 1.2);
@@ -193,7 +193,7 @@
       const i = gallery.push({ src: v[kind], cap: `${a.name}, ${v.title}: ${v.text}` }) - 1;
       const first = V.findIndex((x) => x[kind]);
       // only the first view loads with the page; the others get their src when they are next
-      return `<img ${k === first ? 'src' : 'data-src'}="${esc(v[kind])}" alt="${esc(`${a.name}, ${v.title}`)}" data-i="${i}" data-v="${k}" class="${k === first ? 'on' : ''}" loading="lazy" decoding="async">`;
+      return `<img data-src="${esc(v[kind])}" alt="${esc(`${a.name}, ${v.title}`)}" data-i="${i}" data-v="${k}" class="${k === first ? 'on' : ''}" decoding="async">`;
     }).join('');
     return `
       <div class="stage-wrap">
@@ -207,7 +207,7 @@
           <button type="button" role="tab" id="${esc(a.id)}-tab-${k}" aria-controls="${esc(a.id)}-panel" class="${k ? '' : 'on'}" data-v="${k}" aria-selected="${!k}" tabindex="${k ? -1 : 0}">
             <span class="vt">${(v.desktop || v.phone) ? `<img data-thumb="${esc(v.desktop || v.phone)}" alt="" decoding="async">` : ''}</span><span class="vl"><span class="n">${String(k + 1).padStart(2, '0')}</span><b>${esc(v.title)}</b></span><i class="bar"></i>
           </button>`).join('')}</div>
-        <div class="caption" role="tabpanel" id="${esc(a.id)}-panel" aria-live="polite">${V.map((v, k) => `<p class="${k ? '' : 'on'}" data-v="${k}">${esc(v.text)}</p>`).join('')}</div>
+        <div class="caption" role="tabpanel" id="${esc(a.id)}-panel">${V.map((v, k) => `<p class="${k ? '' : 'on'}" data-v="${k}">${esc(v.text)}</p>`).join('')}</div>
       </div>`;
   };
   const appHTML = (a) => `
@@ -228,8 +228,8 @@
           <p class="ex-label"><b>${list.length} Apps</b> in diesem Bereich · zum Umschalten antippen</p>
           <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige App"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="Nächste App"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
         </div>
-        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
-        <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `class="app${k ? '' : ' on'}`)).join('')}</div>
+        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" id="tab-${esc(a.id)}" aria-controls="${esc(a.id)}" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
+        <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `${list.length > 1 ? `role="tabpanel" aria-labelledby="tab-${esc(a.id)}" ` : ''}class="app${k ? '' : ' on'}`)).join('')}</div>
         ${list.length > 1 ? `<div class="ex-foot"><button type="button" class="ex-next" data-step="1">Nächste App: <i></i><b></b><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>` : ''}
       </div>`;
   // Small sites: a tile with the first view's desktop shot
@@ -313,10 +313,10 @@
       <text x="${n.x + 66}" y="${n.y + 35}" class="nt">${esc(n.t)}</text>
       <text x="${n.x + 66}" y="${n.y + 57}" class="ns">${esc(n.s)}</text>
     </g>`;
-  const flowBtns = P.flows.map((f, k) => `<button type="button" role="tab" aria-selected="${!k}" class="flow-btn${k ? '' : ' on'}" data-flow="${f.id}" style="--c:${f.c}"><i>${icon(f.i)}</i>${esc(f.t)}<span class="fbar"></span></button>`).join('');
+  const flowBtns = P.flows.map((f, k) => `<button type="button" aria-pressed="${!k}" class="flow-btn${k ? '' : ' on'}" data-flow="${f.id}" style="--c:${f.c}"><i>${icon(f.i)}</i>${esc(f.t)}<span class="fbar"></span></button>`).join('');
   $('#arch').innerHTML = `
     <span class="abb">Abb. 1</span><div class="viz-head"><h3>Architektur</h3><p>Ablauf wählen, der Weg leuchtet auf</p></div>
-    <div class="flows" role="tablist" aria-label="Abläufe">${flowBtns}</div>
+    <div class="flows" role="group" aria-label="Abläufe">${flowBtns}</div>
     <div class="board">
       <svg viewBox="0 0 1480 660" role="img" aria-label="Architektur von Castillo">
         <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="context-stroke"/></marker></defs>
@@ -328,7 +328,7 @@
       </svg>
     </div>
     <div class="flow-steps">${P.flows.map((f, k) => { const seq = [f.path[0][0], ...f.path.map((e) => e[1])]; return `<ol class="${k ? '' : 'on'}" data-flow="${f.id}" style="--c:${f.c}">${seq.map((id, j) => `<li style="--j:${j}"><i style="--nc:${N[id].c}">${icon(N[id].i)}</i><b>${esc(N[id].t)}</b><span>${esc(N[id].s)}</span></li>`).join('')}</ol>`; }).join('')}</div>
-    <div class="flow-caption" aria-live="polite">${P.flows.map((f, k) => `<p class="${k ? '' : 'on'}" data-flow="${f.id}">${esc(f.text)}</p>`).join('')}</div>`;
+    <div class="flow-caption">${P.flows.map((f, k) => `<p class="${k ? '' : 'on'}" data-flow="${f.id}">${esc(f.text)}</p>`).join('')}</div>`;
   {
     const board = $('#arch'), svg = $('#arch .board svg'), pk = $('#arch .pkts');
     let fi = 0, ftimer = 0, fheld = false, fseen = false;
@@ -337,7 +337,7 @@
       const f = P.flows[fi];
       const on = new Set(f.path.map(ek)), nodes = new Set(f.path.flat());
       board.style.setProperty('--fc', f.c);
-      board.querySelectorAll('.flow-btn').forEach((b, j) => { b.classList.toggle('on', j === fi); b.setAttribute('aria-selected', String(j === fi)); });
+      board.querySelectorAll('.flow-btn').forEach((b, j) => { b.classList.toggle('on', j === fi); b.setAttribute('aria-pressed', String(j === fi)); });
       board.querySelectorAll('.flow-caption p, .flow-steps ol').forEach((p) => p.classList.toggle('on', p.dataset.flow === f.id));
       svg.querySelectorAll('.aedge').forEach((e) => e.classList.toggle('on', on.has(e.dataset.e)));
       svg.querySelectorAll('.anode').forEach((n) => { n.classList.toggle('on', nodes.has(n.dataset.id)); n.classList.toggle('off', !nodes.has(n.dataset.id)); });
@@ -346,7 +346,7 @@
       try { svg.setCurrentTime(0); } catch {}
     };
     const ftick = () => { clearTimeout(ftimer); board.classList.toggle('playing', fseen && !fheld && !still); if (fseen && !fheld && !still) ftimer = setTimeout(() => { showFlow(fi + 1); ftick(); }, 6000); };
-    board.querySelectorAll('.flow-btn').forEach((b, j) => b.addEventListener('click', () => { fheld = true; showFlow(j); ftick(); }));
+    board.querySelectorAll('.flow-btn').forEach((b, j) => b.addEventListener('click', () => { fheld = true; $('.flow-caption', board).setAttribute('aria-live', 'polite'); showFlow(j); ftick(); }));
     new IntersectionObserver(([e]) => { fseen = e.isIntersecting; if (fseen && !still) svg.unpauseAnimations(); else svg.pauseAnimations(); ftick(); }, { threshold: 0.3 }).observe(board);
     showFlow(0);
   }
@@ -412,7 +412,7 @@
       const x = padL + i * bw + 1, w = bw - 2, h = Math.max(n ? 3 : 0, (Hh - padT - padB) * n / top), yy = Hh - padB - h;
       const ms = tl[d];
       const tip = `${day(d)} · ${fmt.format(n)} Commits${ms ? ` · ${ms}` : ''}`;
-      return `<g class="day${ms ? ' ms' : ''}" style="--i:${i}" tabindex="0" aria-label="${esc(tip)}" data-tip="${esc(tip)}">
+      return `<g class="day${ms ? ' ms' : ''}" style="--i:${i}" data-tip="${esc(tip)}">
         <rect class="hit" x="${padL + i * bw}" y="${padT}" width="${bw}" height="${Hh - padT - padB}"/>
         <path class="bar" d="M${x} ${Hh - padB}V${yy + Math.min(4, h)}q0-4 4-4h${w - 8}q4 0 4 4V${Hh - padB}z"/>
         ${ms ? `<circle cx="${x + w / 2}" cy="${yy - 10}" r="4.5" class="pin"/>` : ''}
@@ -482,7 +482,7 @@
     const live = () => seen && app.classList.contains('on');
     const tick = () => { clearTimeout(timer); app.classList.toggle('playing', live() && !held && !still); if (live() && !held && !still) timer = setTimeout(() => { go(at + 1); tick(); }, DWELL); };
     app.addEventListener('shown', () => { go(0); tick(); });
-    const pick = (j) => { held = true; app.classList.add('held'); app.classList.remove('playing'); go(j); clearTimeout(timer); };
+    const pick = (j) => { $('.caption', app).setAttribute('aria-live', 'polite'); held = true; app.classList.add('held'); app.classList.remove('playing'); go(j); clearTimeout(timer); };
     tabs.forEach((t, j) => {
       t.addEventListener('click', () => pick(j));
       t.addEventListener('keydown', (e) => {
@@ -601,6 +601,11 @@
   });
 
 
+  // Animations rest while their section is off screen (CSS .off), SMIL too
+  document.querySelectorAll('#plattform, #arbeitsweise, .marquee').forEach((sec) => new IntersectionObserver(([e]) => sec.classList.toggle('off', !e.isIntersecting)).observe(sec));
+  const loopSvg = $('#loop .loop > svg');
+  if (loopSvg) { if (still) loopSvg.pauseAnimations(); new IntersectionObserver(([e]) => (e.isIntersecting && !still ? loopSvg.unpauseAnimations() : loopSvg.pauseAnimations())).observe(loopSvg); }
+
   // Every counting figure starts out formatted (2'382), also when it never animates
   const fmtAll = new Intl.NumberFormat('de-CH');
   document.querySelectorAll('[data-n]').forEach((el) => { const n = Number(el.dataset.n); if (Number.isFinite(n)) el.textContent = fmtAll.format(n); });
@@ -611,7 +616,7 @@
   const show = (i) => {
     at = (i + gallery.length) % gallery.length;
     const s = gallery[at];
-    $('img', box).src = s.src; $('img', box).alt = s.cap; $('figcaption', box).textContent = s.cap;
+    $('img', box).src = s.src; $('img', box).alt = ''; $('figcaption', box).textContent = s.cap;
   };
   const open = (el) => { show(Number(el.dataset.i)); box.showModal(); };
   document.addEventListener('click', (e) => {

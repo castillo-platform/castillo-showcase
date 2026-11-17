@@ -129,12 +129,8 @@ a { color: inherit; }
 .explorer { background: var(--sheet); border-radius: 28px; box-shadow: var(--shadow-lg); padding: 14px; }
 .picker { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 4px; }
 .picker::-webkit-scrollbar { display: none; }
-.picker button { flex: none; display: inline-flex; align-items: center; gap: 10px; font: inherit; font-weight: 650; font-size: 16px; color: var(--ink); background: transparent; border: 0; border-radius: 16px; padding: 8px 16px 8px 8px; cursor: pointer; transition: background .25s, box-shadow .25s; }
 .picker button i { width: 34px; height: 34px; border-radius: 11px; background: var(--c); display: grid; place-items: center; color: #fff; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
 .picker button i svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
-.picker button:hover { background: var(--page); }
-.picker button.on { background: var(--page); box-shadow: inset 0 0 0 1px var(--line); }
-.picker button.on i { transform: scale(1.12); }
 .panels { display: grid; padding: 20px 18px 10px; }
 .app { grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: start; visibility: hidden; opacity: 0; transition: opacity .45s ease, visibility 0s .45s; }
 .app.on { visibility: visible; opacity: 1; transition: opacity .55s ease; z-index: 1; }
@@ -184,8 +180,6 @@ a { color: inherit; }
 /* View tabs with a progress line that runs while the views play on their own */
 .views { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; margin-top: 22px; }
 .views button { position: relative; text-align: left; font: inherit; color: inherit; background: transparent; border: 0; border-radius: 14px; padding: 12px 14px 16px; cursor: pointer; display: grid; gap: 3px; align-content: start; transition: background .25s; overflow: hidden; }
-.views button:hover { background: var(--page); }
-.views button.on { background: var(--page); }
 .views .n { font-family: var(--mono); font-size: 14px; color: var(--muted); }
 .views button.on .n { color: var(--c); }
 .views b { font-size: 16px; line-height: 1.3; }
@@ -208,57 +202,13 @@ a { color: inherit; }
 
 /* Games: the big ones share an explorer, the others are cards */
 .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 20px; margin-top: 28px; }
-.game { display: grid; gap: 12px; background: var(--sheet); border-radius: 22px; padding: 12px 12px 18px; box-shadow: var(--shadow); }
-.game .shot { border-radius: 14px; overflow: hidden; aspect-ratio: 16 / 10; background: color-mix(in srgb, var(--c) 14%, var(--sheet)); cursor: zoom-in; position: relative; }
-.game .shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.game:hover .shot img { transform: scale(1.06); }
-.game .shot.empty { display: grid; place-items: center; cursor: default; }
-.game .shot.empty svg { width: 30%; stroke: var(--c); fill: none; stroke-width: 1.3; }
-.game h4 { margin: 0 6px; font-size: 21px; font-weight: 750; display: flex; align-items: center; gap: 10px; }
-.game h4 i { width: 30px; height: 30px; border-radius: 9px; background: var(--c); display: grid; place-items: center; color: #fff; }
-.game h4 i svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.game h4 small { margin-left: auto; font-size: 14px; font-weight: 600; color: var(--muted); }
-.game p { color: var(--muted); font-size: 16px; margin: 0 6px; }
 
 /* Small sites: tiles */
-.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 18px; }
-.tile { background: var(--sheet); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
-.tile .thumb { aspect-ratio: 16 / 10; background: color-mix(in srgb, var(--c) 14%, var(--sheet)); cursor: zoom-in; overflow: hidden; }
-.tile .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .5s; }
-.tile:hover .thumb img { transform: scale(1.04); }
-.tile .thumb.empty { display: grid; place-items: center; cursor: default; }
-.tile .thumb.empty svg { width: 64px; stroke: var(--c); fill: none; stroke-width: 1.6; }
-.tile .body { padding: 16px 18px 18px; display: grid; gap: 6px; }
-.tile h4 { margin: 0; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.tile h4::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
-.tile p { font-size: 15px; color: var(--muted); }
 
 /* Platform: light, the drawing on a sheet */
 .platform, .how { padding-block: 88px 40px; }
-.arch { margin-bottom: 40px; background: var(--sheet); border-radius: 28px; box-shadow: var(--shadow-lg); padding: 18px; overflow-x: auto; }
-.arch svg { width: 100%; min-width: 900px; height: auto; display: block; }
-.layers { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 16px; }
-.layer { border-radius: 20px; padding: 22px; background: var(--sheet); box-shadow: var(--shadow); }
-.layer h4 { margin: 0 0 4px; font-size: 20px; display: flex; gap: 10px; align-items: center; }
-.layer h4 i { width: 12px; height: 12px; border-radius: 4px; background: var(--c); }
-.layer ul { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 16px; color: var(--muted); }
-.layer .tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-.layer .tools span { font-family: var(--mono); font-size: 14px; padding: 3px 8px; border-radius: 7px; background: var(--page); color: var(--ink); }
-.zones { display: none; list-style: none; margin: 0; padding: 0; }
 
 /* How it is built */
-.how-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 16px; }
-.card { background: var(--sheet); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
-.card b { display: block; font-size: 19px; margin-bottom: 6px; }
-.card p { color: var(--muted); font-size: 16px; }
-.card .big { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: var(--c, var(--ink)); display: block; margin-bottom: 4px; }
-.timeline { list-style: none; padding: 0; margin: 56px 0 0; position: relative; display: grid; gap: 18px; }
-.timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
-.timeline::after { content: ""; position: absolute; left: 7px; top: 6px; width: 2px; height: calc((100% - 12px) * var(--p, 0)); background: var(--sun); }
-.timeline li { position: relative; padding-left: 34px; display: grid; grid-template-columns: 130px 1fr; gap: 16px; }
-.timeline li::before { content: ""; position: absolute; left: 0; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--line); box-shadow: 0 0 0 4px var(--page); transition: background .3s, transform .3s; }
-.timeline li.on::before { background: var(--sun); transform: scale(1.15); }
-.timeline time { font-family: var(--mono); font-size: 15px; color: var(--muted); padding-top: 1px; }
 
 .foot { padding-block: 48px 64px; border-top: 1px solid var(--line); margin-top: 64px; }
 .foot-in { display: grid; gap: 12px; }
@@ -282,11 +232,11 @@ a { color: inherit; }
 .lightbox .next { right: 16px; top: 50%; translate: 0 -50%; }
 
 /* Clickable screenshots are buttons */
-button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; text-align: left; }
-.dev:focus-visible, button.thumb:focus-visible, button.shot:focus-visible, .views button:focus-visible, .picker button:focus-visible, .menu-btn:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; text-align: left; }
+.dev:focus-visible, button.shot:focus-visible, .views button:focus-visible, .picker button:focus-visible, .menu-btn:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 
 /* Repainting animations rest while the hero is off screen */
-.hero.off *, .hero.off *::before, .hero.off *::after { animation-play-state: paused !important; }
+.off *, .off *::before, .off *::after, .marquee.off .track { animation-play-state: paused !important; }
 
 /* Tablet */
 @media (max-width: 960px) {
@@ -294,7 +244,6 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .castle { left: 50%; }
   .app { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .app .stage-wrap { order: -1; }
-  .explorer .picker + .panels .app .app-text > .pitch { margin-top: 0; }
   .panels { padding: 16px 6px 6px; }
 }
 /* Phone */
@@ -324,24 +273,7 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .dev.desk .screen { height: calc(100% - 18px); }
   .trio { aspect-ratio: 16 / 13; }
   .cloud { width: calc(var(--w) * .5); opacity: calc(var(--o) * .8); }
-  .explorer .picker + .panels .app-head { display: none; }
-  .timeline li { grid-template-columns: 1fr; gap: 2px; }
   .lightbox .prev, .lightbox .next { top: auto; bottom: 20px; translate: none; }
-}
-/* Architecture on a phone: zones as a list instead of the wide drawing */
-@media (max-width: 700px) {
-  .arch { padding: 0; background: none; box-shadow: none; }
-  .arch svg { display: none; }
-  .zones { display: grid; gap: 22px; position: relative; }
-  .zones::before { content: ""; position: absolute; left: 15px; top: 10px; bottom: 10px; width: 2px; background: var(--line); }
-  .zones > li { position: relative; padding-left: 40px; }
-  .zones > li::before { content: ""; position: absolute; left: 8px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--page); box-shadow: inset 0 0 0 3px #9aa6ba; }
-  .zones > li.home::before { box-shadow: inset 0 0 0 3px var(--sun); }
-  .zones b { font-family: var(--mono); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .zones li.home b { color: var(--sun-ink); }
-  .zones ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
-  .zones ul li { background: var(--sheet); box-shadow: var(--shadow); border-radius: 12px; padding: 10px 14px; font-size: 15px; color: var(--muted); }
-  .zones ul li span { display: block; color: var(--ink); font-weight: 650; font-size: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -418,14 +350,10 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
 .app.on .dev.ph { translate: 0 calc(var(--dy, 0px) * 1.1); }
 
 /* Cards and layers come in one after the other */
-.layer.reveal, .card.reveal { transition-delay: calc(var(--k, 0) * 70ms); }
-.card .big { display: inline-block; transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
-.card:hover .big { transform: translateY(-4px) scale(1.06); }
-.layer, .card, .service, .stat { transition: box-shadow .3s, transform .4s var(--ease); }
-.layer:hover, .card:hover, .service:hover, .stat:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.service, .stat { transition: box-shadow .3s, transform .4s var(--ease); }
+.service:hover, .stat:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 
 /* Architecture: each box gives a soft beat now and then, as if a request just arrived */
-.arch .node rect:first-child { transform-box: fill-box; transform-origin: center; animation: beat 4.6s ease-in-out infinite; animation-delay: calc(var(--k) * -0.2s); }
 @keyframes beat { 0%, 86%, 100% { transform: scale(1); } 90% { transform: scale(1.025); } }
 
 /* Stat figures land with a small bounce */
@@ -438,7 +366,7 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .section-head .count { opacity: 1; transition: none; }
   .picker .pill { transition: none; }
   .app.on .dev.desk, .app.on .dev.tab, .app.on .dev.ph { translate: none; }
-  .arch .node rect:first-child, .stat.in b { animation: none; }
+  .stat.in b { animation: none; }
   .track.rev { animation: none; }
 }
 
@@ -548,10 +476,10 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
 
 /* Conveyor: a belt with a token that runs through five stages; each stage ticks when reached */
 .conveyor { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; padding: 10px 4px 8px; }
-.belt { position: absolute; left: 10%; right: 10%; top: 44px; height: 8px; border-radius: 8px; background: repeating-linear-gradient(90deg, #ece5d8 0 14px, #f6f1e8 14px 28px); animation: belt 1.2s linear infinite; }
+.belt { container-type: inline-size; position: absolute; left: 10%; right: 10%; top: 44px; height: 8px; border-radius: 8px; background: repeating-linear-gradient(90deg, #ece5d8 0 14px, #f6f1e8 14px 28px); animation: belt 1.2s linear infinite; }
 @keyframes belt { to { background-position: 28px 0; } }
 .token { position: absolute; top: 50%; left: 0; width: 22px; height: 22px; margin-top: -11px; border-radius: 7px; background: var(--sun); box-shadow: 0 4px 10px rgb(180 105 14 / 35%); animation: token 6s cubic-bezier(.6, 0, .4, 1) infinite; }
-@keyframes token { 0% { left: -2%; } 18% { left: 23%; } 22% { left: 23%; } 40% { left: 48%; } 44% { left: 48%; } 62% { left: 73%; } 66% { left: 73%; } 84%, 100% { left: 98%; } }
+@keyframes token { 0% { transform: translateX(-2cqw); } 18%, 22% { transform: translateX(23cqw); } 40%, 44% { transform: translateX(48cqw); } 62%, 66% { transform: translateX(73cqw); } 84%, 100% { transform: translateX(98cqw); } }
 .stage { position: relative; display: grid; justify-items: center; text-align: center; gap: 4px; }
 .stage i { width: 66px; height: 66px; border-radius: 20px; background: var(--sheet); box-shadow: var(--shadow), inset 0 0 0 1.5px var(--line); display: grid; place-items: center; color: var(--ink); position: relative; z-index: 1; animation: stagepop 6s ease infinite; animation-delay: calc(var(--k) * 1.3s); }
 .stage i svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -652,8 +580,8 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .flow-steps ol { grid-area: 1 / 1; list-style: none; margin: 0; padding: 0 0 0 4px; display: grid; gap: 14px; position: relative; visibility: hidden; opacity: 0; transition: opacity .4s, visibility 0s .4s; }
   .flow-steps ol.on { visibility: visible; opacity: 1; transition: opacity .5s; }
   .flow-steps ol::before { content: ""; position: absolute; left: 25px; top: 24px; bottom: 24px; width: 3px; border-radius: 3px; background: repeating-linear-gradient(180deg, var(--c) 0 8px, transparent 8px 14px); opacity: .55; }
-  .flow-steps ol::after { content: ""; position: absolute; left: 20px; top: 20px; width: 13px; height: 13px; border-radius: 50%; background: var(--c); border: 3px solid #fff; box-shadow: var(--shadow); animation: down 4s cubic-bezier(.6, 0, .4, 1) infinite; }
-  @keyframes down { from { top: 20px; } to { top: calc(100% - 34px); } }
+  .flow-steps ol::before { animation: flowline 1s linear infinite; }
+  @keyframes flowline { to { background-position: 0 14px; } }
   .flow-steps li { display: grid; grid-template-columns: 48px 1fr; column-gap: 12px; align-items: center; position: relative; opacity: 0; translate: 0 10px; }
   .flow-steps ol.on li { opacity: 1; translate: 0 0; transition: opacity .4s, translate .5s var(--ease); transition-delay: calc(var(--j) * 90ms); }
   .flow-steps li i { grid-row: span 2; width: 48px; height: 48px; border-radius: 14px; background: var(--nc); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 4px var(--sheet); }
@@ -663,7 +591,7 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
   .lnode { width: 96px; }
   .lnode b { font-size: 13px; }
 }
-@media (prefers-reduced-motion: reduce) { .flow-steps ol::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .flow-steps ol::before { animation: none; } }
 
 /* Scroll hint under the hero button */
 .scroll-hint { display: block; width: 26px; height: 42px; margin-top: 26px; border-radius: 14px; box-shadow: inset 0 0 0 2px #33465f; position: relative; opacity: 0; animation: up .9s .8s var(--ease) forwards; }
@@ -724,3 +652,15 @@ button.thumb, button.shot { display: block; width: 100%; padding: 0; border: 0; 
 ::view-transition-new(root) { animation: vt-in .38s var(--ease) both; }
 @keyframes vt-out { to { opacity: 0; } }
 @keyframes vt-in { from { opacity: 0; } }
+
+/* Tech review round 2 */
+.menu-btn .cur { display: inline-block; min-width: 7.6em; max-width: 7.6em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.flow-btn:focus-visible, .ex-step:focus-visible, .ex-next:focus-visible, .chips a:focus-visible, .cta:focus-visible, .totop:focus-visible, .news-card:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { #stack.in .band, #stack.in .cl { transition: none; } }
+/* App cards: base layout (restored after the clean-up) */
+.picker button { flex: none; display: inline-flex; align-items: center; font: inherit; color: var(--ink); border: 0; cursor: pointer; }
+.picker button:not(.on) { background: var(--sheet); }
+.token { z-index: 3; }
+.belt { z-index: 2; }
+.stage i { z-index: 1; }
+.menu-btn .cur { min-width: 6.2em; max-width: 6.2em; }
