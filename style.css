@@ -428,8 +428,8 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
   .ex-next { font-size: 15px; }
 }
 /* With app cards above, the panel needs no second app heading */
-.explorer .picker-wrap ~ .panels .app-head { display: none; }
-.explorer .picker-wrap ~ .panels .pitch { margin-top: 4px; }
+.explorer .ex-bar ~ .panels .app-head { display: none; }
+.explorer .ex-bar ~ .panels .pitch { margin-top: 4px; }
 
 
 /* ================= Platform as pictures ================= */
@@ -609,7 +609,7 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 .app { transition: none; }
 .app.on { transition: opacity .5s ease; }
 .track.rev { display: none; }
-.picker-wrap::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 28px; z-index: 2; background: linear-gradient(270deg, transparent, var(--sheet)); pointer-events: none; }
+.picker-wrap::before { content: none; position: absolute; top: 0; left: 0; bottom: 0; width: 28px; z-index: 2; background: linear-gradient(270deg, transparent, var(--sheet)); pointer-events: none; }
 .picker-wrap::after { z-index: 2; }
 .tower-hint { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; margin-left: 14px; font-size: 15px; font-weight: 600; color: #33465f; opacity: 0; animation: up .9s .9s var(--ease) forwards; }
 .tower-hint svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -680,18 +680,41 @@ table.sr { display: block; position: absolute; width: 1px; height: 1px; overflow
 :root { --shadow-lg: 0 2px 4px rgb(29 36 51 / 6%), 0 18px 40px rgb(29 36 51 / 11%); }
 .news-row { mask-image: linear-gradient(90deg, #000 88%, transparent); }
 .bt.apps { display: grid; grid-template-columns: repeat(10, 34px); gap: 6px; }
-@media (max-width: 960px) {
-  /* text first: what the app is, then how it looks */
-  .app .stage-wrap { order: 0; }
+
+/* Owner feedback 2026-11-17: slim app switcher, text view tabs, all three devices first */
+.ex-bar { display: flex; align-items: center; gap: 14px; padding: 0 0 12px; }
+.ex-bar .picker-wrap { flex: 1; min-width: 0; }
+.picker { gap: 8px; padding: 4px 40px 4px 4px; }
+.picker button { gap: 10px; padding: 7px 16px 7px 7px; border-radius: 14px; background: transparent; box-shadow: none; font-weight: 650; }
+.picker button:not(.on) { background: transparent; }
+.picker button:hover { background: var(--page); box-shadow: none; transform: none; }
+.picker button i { width: 34px; height: 34px; border-radius: 10px; }
+.picker button i svg { width: 19px; height: 19px; }
+.picker button b { font-size: 16px; white-space: nowrap; }
+.picker button.on { color: var(--ink); }
+.picker button.on i { transform: scale(1.08); }
+.picker .pill { top: 4px; border-radius: 14px; background: color-mix(in srgb, var(--c, var(--ink)) 12%, var(--sheet)); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c, var(--ink)) 55%, transparent); transition: transform .5s var(--ease), width .5s var(--ease), background .4s, box-shadow .4s; }
+.ex-step { width: 38px; height: 38px; }
+.views { gap: 6px; margin-top: 22px; }
+.views button { padding: 12px 14px 16px; gap: 3px; border-radius: 14px; background: transparent; box-shadow: none; }
+.views button:hover { background: var(--page); box-shadow: none; transform: none; }
+.views button.on { background: var(--page); box-shadow: none; }
+.views b { font-size: 16px; }
+.views .bar { left: 14px; right: 14px; bottom: 7px; }
+@media (max-width: 640px) {
+  .ex-bar { gap: 8px; }
+  .ex-count { display: none; }
+  .ex-step { width: 34px; height: 34px; }
+  .picker button { padding: 6px 12px 6px 6px; }
+  .picker button i { width: 30px; height: 30px; }
+  .picker button b { font-size: 15px; }
+  .views { margin-top: 14px; gap: 4px; }
+  .views button { padding: 10px 12px 14px; }
+  .views b { font-size: 15px; }
 }
 @media (max-width: 640px) {
   .bird { display: none; }
   .cloud { opacity: calc(var(--o) * .55); }
   .bt.apps { grid-template-columns: repeat(7, 34px); }
-  /* one large phone instead of three small devices */
-  .trio { aspect-ratio: 1 / 1.25; }
-  .trio .dev.desk, .trio .dev.tab { display: none; }
-  .trio .dev.ph { left: 50%; right: auto; bottom: auto; top: 0; width: 54%; translate: -50% 0; border-radius: 30px; padding: 6px; }
-  .app.on .trio .dev.ph { translate: -50% 0; }
-  .trio .dev.ph .screen { border-radius: 24px; }
 }
+@media (max-width: 640px) { .app .tags { display: none; } }

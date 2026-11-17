@@ -202,10 +202,9 @@
           ${V.some((v) => v.tablet) ? `<div class="dev tab" tabindex="0" role="button" aria-label="${esc(a.name)} auf dem iPad vergrössern"><div class="screen">${layer('tablet')}</div></div>` : ''}
           ${V.some((v) => v.phone) ? `<div class="dev ph" tabindex="0" role="button" aria-label="${esc(a.name)} auf dem iPhone vergrössern"><div class="screen">${layer('phone')}</div></div>` : ''}
         </div>
-        <p class="views-label"><b>${V.length} Sichten</b> · antippen zum Umschalten</p>
         <div class="views" role="tablist" aria-label="Sichten von ${esc(a.name)}">${V.map((v, k) => `
           <button type="button" role="tab" id="${esc(a.id)}-tab-${k}" aria-controls="${esc(a.id)}-panel" class="${k ? '' : 'on'}" data-v="${k}" aria-selected="${!k}" tabindex="${k ? -1 : 0}">
-            <span class="vt">${(v.desktop || v.phone) ? `<img data-thumb="${esc(v.desktop || v.phone)}" alt="" decoding="async">` : ''}</span><span class="vl"><span class="n">${String(k + 1).padStart(2, '0')}</span><b>${esc(v.title)}</b></span><i class="bar"></i>
+            <span class="n">${String(k + 1).padStart(2, '0')}</span><b>${esc(v.title)}</b><i class="bar"></i>
           </button>`).join('')}</div>
         <div class="caption" role="tabpanel" id="${esc(a.id)}-panel">${V.map((v, k) => `<p class="${k ? '' : 'on'}" data-v="${k}">${esc(v.text)}</p>`).join('')}</div>
       </div>`;
@@ -215,7 +214,7 @@
       <div class="app-text">
         <div class="app-head"><span class="icon">${icon(a.icon)}</span><div><h3>${esc(a.name)}</h3><div class="who">${esc(a.who || '')}</div></div></div>
         <p class="pitch">${esc(a.pitch)}</p>
-        <ul class="feats">${(a.features || []).slice(0, 4).map((f, k) => `<li style="--k:${k}">${esc(f)}</li>`).join('')}</ul>
+        <ul class="feats">${(a.features || []).slice(0, 3).map((f, k) => `<li style="--k:${k}">${esc(f)}</li>`).join('')}</ul>
         <div class="tags">${(a.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div>
       </div>
       ${views3(a)}
@@ -225,10 +224,9 @@
       <div class="explorer reveal">
         ${list.length > 1 ? `
         <div class="ex-bar">
-          <p class="ex-label"><b>${list.length} ${noun}</b> in diesem Bereich · zum Umschalten antippen</p>
+          <div class="picker-wrap"><div class="picker" role="tablist" aria-label="${noun}">${list.map((a, k) => `<button type="button" role="tab" id="tab-${esc(a.id)}" aria-controls="${esc(a.id)}" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><b>${esc(a.name)}</b></button>`).join('')}</div></div>
           <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige ${one}"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="${nextWord}"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
-        </div>
-        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="${noun}">${list.map((a, k) => `<button type="button" role="tab" id="tab-${esc(a.id)}" aria-controls="${esc(a.id)}" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
+        </div>` : ''}
         <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `${list.length > 1 ? `role="tabpanel" aria-labelledby="tab-${esc(a.id)}" ` : ''}class="app${k ? '' : ' on'}`)).join('')}</div>
         ${list.length > 1 ? `<div class="ex-foot"><button type="button" class="ex-next" data-step="1">${nextWord}: <i></i><b></b><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>` : ''}
       </div>`;
@@ -607,7 +605,7 @@
     const pill = document.createElement('span');
     pill.className = 'pill';
     pk.prepend(pill);
-    const place = () => { const on = pk.querySelector('button.on'); if (on) { pill.style.width = `${on.offsetWidth}px`; pill.style.height = `${on.offsetHeight}px`; pill.style.top = `${on.offsetTop}px`; pill.style.transform = `translateX(${on.offsetLeft}px)`; } };
+    const place = () => { const on = pk.querySelector('button.on'); if (on) { pill.style.setProperty('--c', on.style.getPropertyValue('--c')); pill.style.width = `${on.offsetWidth}px`; pill.style.height = `${on.offsetHeight}px`; pill.style.top = `${on.offsetTop}px`; pill.style.transform = `translateX(${on.offsetLeft}px)`; } };
     new MutationObserver(place).observe(pk, { subtree: true, attributes: true, attributeFilter: ['class'] });
     addEventListener('resize', place);
     requestAnimationFrame(place);
