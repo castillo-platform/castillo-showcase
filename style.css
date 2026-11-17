@@ -663,7 +663,7 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 .token { z-index: 3; }
 .belt { z-index: 2; }
 .stage i { z-index: 1; }
-.menu-btn .cur { min-width: 6.2em; max-width: 6.2em; }
+.menu-btn .cur { min-width: 4.8em; max-width: 6.2em; }
 
 /* Mini castle in each group head */
 .minicastle { display: block; width: min(320px, 70%); height: auto; margin-bottom: 6px; overflow: visible; }
@@ -674,3 +674,24 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 @keyframes hop { 40% { transform: translateY(-6px); } }
 .minicastle .mg { fill: #d9d1c2; }
 @media (prefers-reduced-motion: reduce) { .minicastle .mt { transform: none; opacity: 1; transition: none; } .section-head.in .minicastle .mt.on { animation: none; } }
+
+/* Final review */
+table.sr { display: block; position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+:root { --shadow-lg: 0 2px 4px rgb(29 36 51 / 6%), 0 18px 40px rgb(29 36 51 / 11%); }
+.news-row { mask-image: linear-gradient(90deg, #000 88%, transparent); }
+.bt.apps { display: grid; grid-template-columns: repeat(10, 34px); gap: 6px; }
+@media (max-width: 960px) {
+  /* text first: what the app is, then how it looks */
+  .app .stage-wrap { order: 0; }
+}
+@media (max-width: 640px) {
+  .bird { display: none; }
+  .cloud { opacity: calc(var(--o) * .55); }
+  .bt.apps { grid-template-columns: repeat(7, 34px); }
+  /* one large phone instead of three small devices */
+  .trio { aspect-ratio: 1 / 1.25; }
+  .trio .dev.desk, .trio .dev.tab { display: none; }
+  .trio .dev.ph { left: 50%; right: auto; bottom: auto; top: 0; width: 54%; translate: -50% 0; border-radius: 30px; padding: 6px; }
+  .app.on .trio .dev.ph { translate: -50% 0; }
+  .trio .dev.ph .screen { border-radius: 24px; }
+}

@@ -53,7 +53,7 @@ window.CASTILLO = {
         tags: ['Go', 'Vanilla JS', 'SearXNG'] }),
     ] },
 
-    { id: 'geld', nav: 'Geld & Papier', kicker: 'Haushalt', title: 'Geld und Papierkram',
+    { id: 'geld', nav: 'Geld & Papier', short: 'Geld', kicker: 'Haushalt', title: 'Geld und Papierkram',
       sub: 'Kontoauszüge, Belege, Verträge und Steuern. Beide Apps lesen die Unterlagen selbst und fragen nur nach, wenn etwas unklar ist.', apps: [
       A('finance', 'Finance', '#2563eb', 'wallet', 'Das Haushaltsbuch für Konten in mehreren Währungen: Buchungen, Ausgaben, Depot, Steuern und ein Plan bis Ende des nächsten Jahres.', {
         who: 'Haushalt',

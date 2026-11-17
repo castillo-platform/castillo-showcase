@@ -380,7 +380,7 @@
       <div class="stack">${[...P.stack].reverse().map((l, k, arr) => `
         <div class="band" style="--c:${l.c};--k:${arr.length - 1 - k}">
           <div class="bl"><i>${icon(l.i)}</i><b>${esc(l.t)}</b></div>
-          <div class="bt">${l.apps ? appIcons : l.tools.map((t) => `<span>${esc(t)}</span>`).join('')}</div>
+          <div class="bt${l.apps ? ' apps' : ''}">${l.apps ? appIcons : l.tools.map((t) => `<span>${esc(t)}</span>`).join('')}</div>
         </div>`).join('')}</div>
       <div class="cloudcol">${P.cloud.map((c, k) => `<div class="cl" style="--c:${c.c};--k:${k}"><i>${icon(c.i)}</i><b>${esc(c.t)}</b><span>${esc(c.s)}</span></div>`).join('')}</div>
     </div>`;
@@ -454,8 +454,8 @@
   $('#timeline').innerHTML = (H.timeline || []).map((t, k) => `<div class="ms-card reveal" style="--k:${k}"><i>${icon(t.i)}</i><time>${esc(t.date.slice(0, 6))}</time><b>${esc(t.short)}</b></div>`).join('');
 
   // Nav chips, highlighted while their section is on screen
-  const sections = [...D.groups.map((g) => ({ id: g.id, label: g.nav })), { id: 'plattform', label: 'Plattform' }, { id: 'arbeitsweise', label: 'Arbeitsweise' }];
-  $('#nav').innerHTML = sections.map((s) => `<a href="#${s.id}" data-id="${s.id}">${esc(s.label)}</a>`).join('');
+  const sections = [...D.groups.map((g) => ({ id: g.id, label: g.nav, short: g.short || g.nav })), { id: 'plattform', label: 'Plattform', short: 'Plattform' }, { id: 'arbeitsweise', label: 'Arbeitsweise', short: 'Arbeit' }];
+  $('#nav').innerHTML = sections.map((s) => `<a href="#${s.id}" data-id="${s.id}" data-short="${esc(s.short)}">${esc(s.label)}</a>`).join('');
   const nav = $('#nav');
   const chips = new Map([...document.querySelectorAll('#nav a')].map((a) => [a.dataset.id, a]));
   const spy = new IntersectionObserver((entries) => {
@@ -463,7 +463,7 @@
       if (!e.isIntersecting) continue;
       chips.forEach((a) => a.classList.remove('on'));
       const on = chips.get(e.target.id);
-      if (on) { $('#menu-cur').textContent = on.textContent; on.classList.add('on'); nav.scrollTo({ left: on.offsetLeft - 16, behavior: still ? 'auto' : 'smooth' }); }
+      if (on) { $('#menu-cur').textContent = on.dataset.short; on.classList.add('on'); nav.scrollTo({ left: on.offsetLeft - 16, behavior: still ? 'auto' : 'smooth' }); }
     }
   }, { rootMargin: '-45% 0px -50% 0px' });
   sections.forEach((s) => { const el = document.getElementById(s.id); if (el) spy.observe(el); });
