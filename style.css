@@ -660,9 +660,10 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 /* App cards: base layout (restored after the clean-up) */
 .picker button { flex: none; display: inline-flex; align-items: center; font: inherit; color: var(--ink); border: 0; cursor: pointer; }
 .picker button:not(.on) { background: var(--sheet); }
-.token { z-index: 3; }
-.belt { z-index: 2; }
-.stage i { z-index: 1; }
+/* The belt runs behind the stations; the parcel passes through them */
+.belt { z-index: 0; }
+.stage i { z-index: 3; }
+.stage em { z-index: 4; }
 .menu-btn .cur { min-width: 4.8em; max-width: 6.2em; }
 
 /* Mini castle in each group head */
@@ -687,7 +688,9 @@ table.sr { display: block; position: absolute; width: 1px; height: 1px; overflow
 .picker { gap: 8px; padding: 4px 40px 4px 4px; }
 .picker button { gap: 10px; padding: 7px 16px 7px 7px; border-radius: 14px; background: transparent; box-shadow: none; font-weight: 650; }
 .picker button:not(.on) { background: transparent; }
-.picker button:hover { background: var(--page); box-shadow: none; transform: none; }
+.picker button:hover { box-shadow: none; transform: none; }
+.picker button:not(.on):hover { background: var(--page); }
+.picker button.on, .picker button.on:hover { background: transparent; }
 .picker button i { width: 34px; height: 34px; border-radius: 10px; }
 .picker button i svg { width: 19px; height: 19px; }
 .picker button b { font-size: 16px; white-space: nowrap; }
@@ -726,3 +729,4 @@ table.sr { display: block; position: absolute; width: 1px; height: 1px; overflow
   .ex-bar .picker button { flex-direction: column; justify-content: center; gap: 5px; padding: 9px 4px 8px; }
   .ex-bar .picker button b { font-size: 14px; }
 }
+@media (max-width: 640px) { .belt .token { display: none; } }
