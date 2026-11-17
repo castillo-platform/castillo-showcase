@@ -221,16 +221,16 @@
       ${views3(a)}
     </article>`;
   // Explorer: the group's apps as tabs over one shared stage
-  const explorer = (list) => `
+  const explorer = (list, noun = 'Apps', one = 'App', nextWord = 'Nächste App') => `
       <div class="explorer reveal">
         ${list.length > 1 ? `
         <div class="ex-bar">
-          <p class="ex-label"><b>${list.length} Apps</b> in diesem Bereich · zum Umschalten antippen</p>
-          <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige App"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="Nächste App"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+          <p class="ex-label"><b>${list.length} ${noun}</b> in diesem Bereich · zum Umschalten antippen</p>
+          <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige ${one}"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="${nextWord}"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
         </div>
-        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" id="tab-${esc(a.id)}" aria-controls="${esc(a.id)}" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
+        <div class="picker-wrap"><div class="picker" role="tablist" aria-label="${noun}">${list.map((a, k) => `<button type="button" role="tab" id="tab-${esc(a.id)}" aria-controls="${esc(a.id)}" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
         <div class="panels">${list.map((a, k) => appHTML(a).replace('class="app reveal', `${list.length > 1 ? `role="tabpanel" aria-labelledby="tab-${esc(a.id)}" ` : ''}class="app${k ? '' : ' on'}`)).join('')}</div>
-        ${list.length > 1 ? `<div class="ex-foot"><button type="button" class="ex-next" data-step="1">Nächste App: <i></i><b></b><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>` : ''}
+        ${list.length > 1 ? `<div class="ex-foot"><button type="button" class="ex-next" data-step="1">${nextWord}: <i></i><b></b><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>` : ''}
       </div>`;
   // Small sites: a tile with the first view's desktop shot
   const tileHTML = (t) => {
@@ -258,19 +258,32 @@
   };
   // Games: the big ones get the device stage, the others a card with their first shot
   const gamesHTML = (list) => `
-      ${list.some((g) => g.feature && g.views?.length) ? explorer(list.filter((g) => g.feature && g.views?.length)) : ''}
-      <div class="games-grid">${list.filter((g) => !g.feature).map((g) => `
+      ${list.some((g) => g.feature && g.views?.length) ? explorer(list.filter((g) => g.feature && g.views?.length), 'Spiele', 'Spiel', 'Nächstes Spiel') : ''}
+      ${list.some((g) => !g.feature) ? `<div class="games-grid">${list.filter((g) => !g.feature).map((g) => `
         <article class="game reveal" id="${esc(g.id)}" style="--c:${g.color}">
           ${gameShot(g, 'shot')}
           <h4><i>${icon(g.icon)}</i>${esc(g.name)}<small>${esc(g.who || '')}</small></h4>
           <p>${esc(g.pitch)}</p>
-        </article>`).join('')}</div>`;
+        </article>`).join('')}</div>` : ''}`;
+  // A small castle in every group head: this group's towers in colour, the others grey
+  const allApps = D.groups.flatMap((g) => [...(g.apps || []), ...(g.games || [])]);
+  const miniCastle = (g) => {
+    const mine = new Set([...(g.apps || []), ...(g.games || [])].map((a) => a.id));
+    const hs = [44, 58, 36, 66, 50, 72, 40, 62, 46, 70, 54, 38, 64, 48, 60, 42, 68, 52];
+    const w = 12, gap = 4;
+    const bars = allApps.map((a, i) => {
+      const h = hs[i % hs.length], x = i * (w + gap), on = mine.has(a.id);
+      return `<g class="mt${on ? ' on' : ''}" style="--c:${on ? a.color : '#e3dccf'};--i:${i}"><rect x="${x}" y="${80 - h}" width="${w}" height="${h}" rx="2"/><rect x="${x}" y="${80 - h - 4}" width="3" height="4"/><rect x="${x + 4.5}" y="${80 - h - 4}" width="3" height="4"/><rect x="${x + 9}" y="${80 - h - 4}" width="3" height="4"/></g>`;
+    }).join('');
+    const W = allApps.length * (w + gap) - gap;
+    return `<svg class="minicastle" viewBox="0 -4 ${W} 86" aria-hidden="true">${bars}<rect x="-6" y="80" width="${W + 12}" height="3" rx="1.5" class="mg"/></svg>`;
+  };
   $('#groups').innerHTML = D.groups.map((g, gi) => {
     const n = (g.apps || []).length + (g.games || []).length + (g.tiles || []).length;
     return `
     <section class="group${g.games ? ' games' : ''}" id="${esc(g.id)}">
       <div class="wrap">
-        <div class="section-head reveal"><p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2><span class="mask"><span>${esc(g.title)}</span></span><span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
+        <div class="section-head reveal">${miniCastle(g)}<p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2><span class="mask"><span>${esc(g.title)}</span></span><span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
         ${g.apps?.some((x) => x.views?.length) ? explorer(g.apps.filter((x) => x.views?.length)) : ''}
         ${g.apps?.some((x) => !x.views?.length) ? `<div class="services">${g.apps.filter((x) => !x.views?.length).map(serviceHTML).join('')}</div>` : ''}
         ${g.games?.length ? gamesHTML(g.games) : ''}

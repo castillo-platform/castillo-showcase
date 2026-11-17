@@ -664,3 +664,13 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 .belt { z-index: 2; }
 .stage i { z-index: 1; }
 .menu-btn .cur { min-width: 6.2em; max-width: 6.2em; }
+
+/* Mini castle in each group head */
+.minicastle { display: block; width: min(320px, 70%); height: auto; margin-bottom: 6px; overflow: visible; }
+.minicastle .mt rect { fill: var(--c); }
+.minicastle .mt { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(.2); opacity: .5; transition: transform .8s cubic-bezier(.3, 1.5, .5, 1), opacity .5s; transition-delay: calc(var(--i) * 30ms); }
+.section-head.in .minicastle .mt { transform: none; opacity: 1; }
+.section-head.in .minicastle .mt.on { animation: hop .6s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(.6s + var(--i) * 40ms); }
+@keyframes hop { 40% { transform: translateY(-6px); } }
+.minicastle .mg { fill: #d9d1c2; }
+@media (prefers-reduced-motion: reduce) { .minicastle .mt { transform: none; opacity: 1; transition: none; } .section-head.in .minicastle .mt.on { animation: none; } }
