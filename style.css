@@ -648,10 +648,6 @@ button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit;
 @media (max-width: 640px) { .abb { position: static; display: block; margin: 0 4px 4px; } }
 
 /* App switch as a view transition: the old app slides out, the new one in */
-::view-transition-old(root) { animation: vt-out .28s ease both; }
-::view-transition-new(root) { animation: vt-in .38s var(--ease) both; }
-@keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; } }
 
 /* Tech review round 2 */
 .menu-btn .cur { display: inline-block; min-width: 7.6em; max-width: 7.6em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }

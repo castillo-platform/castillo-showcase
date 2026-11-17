@@ -511,12 +511,6 @@
 
   // Explorer: a tab shows its app; arrows move between apps
   const showApp = (ex, id) => {
-    if (document.startViewTransition && !still && !ex.dataset.vt) {
-      ex.dataset.vt = '1';
-      const t = document.startViewTransition(() => swapApp(ex, id));
-      t.finished.finally(() => { delete ex.dataset.vt; });
-      return;
-    }
     swapApp(ex, id);
   };
   const swapApp = (ex, id) => {
