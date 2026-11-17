@@ -21,20 +21,12 @@ window.CASTILLO = {
     { date: '13.11.', app: 'fit', text: 'Fit ging vom ersten Entwurf bis in die Produktion an einem Tag.' },
   ],
   groups: [
-    { id: 'alltag', nav: 'Alltag', kicker: 'Für jeden Tag', title: 'Der Familienalltag',
-      sub: 'Jede App deckt einen Bereich ab. Alle sind fürs Handy gebaut und laufen im Browser, auf dem iPad und als App auf dem Home-Bildschirm.', apps: [
+    { id: 'planen', nav: 'Planen', kicker: 'Für jeden Tag', title: 'Woche, Haushalt, Ferien',
+      sub: 'Was die Familie erledigen muss und wann sie frei hat. Alle Apps sind fürs Handy gebaut und laufen auch auf dem iPad und als App auf dem Home-Bildschirm.', apps: [
       A('omni', 'Omni', '#3b82f6', 'mail', 'Mails, Aufgaben und Wochenplanung in einer App. Wichtige Mails kommen mit Zusammenfassung und Antwortentwurf, und für die Ziele der Woche bereitet ein Agent den nächsten Schritt vor.', {
         who: 'Persönlicher Assistent',
         features: ['Eine Inbox für Mails und für Hinweise aus Finance und Paper', 'Antwortentwürfe, die nie von selbst verschickt werden', 'Aufgaben mit Listen, Fälligkeit, Wiederholung und Unteraufgaben', 'Bis zu drei Fokus-Aufgaben pro Woche, für die ein Agent vorarbeitet', 'Fragen der Agenten lassen sich mit einem Tipp beantworten', 'Jede Aktion eines Agenten kann rückgängig gemacht werden'],
         tags: ['Go', 'SQLite', 'React', 'MCP'] }),
-      A('cook', 'Cook', '#5f9a6e', 'cook', 'Einkaufsliste, Vorräte und Rezepte für die Familie. Was gekocht wird, geht vom Vorrat ab, und was für ein Rezept fehlt, landet auf der Liste.', {
-        who: 'Küche',
-        features: ['Die Einkaufsliste ordnet jeden Artikel einem Ladenbereich zu', 'Vorräte nach Kühlschrank, Schrank und Tiefkühler, mit Haltbarkeit', 'Rezepte rechnen die Zutaten auf die Zahl der Portionen um', 'Ein Foto vom Kühlschrank wird zu einer Liste von Lebensmitteln', 'Vorlieben pro Person fliessen in die Rezeptvorschläge ein'],
-        tags: ['Go', 'SQLite', 'React', 'Vision-Modell'] }),
-      A('read', 'Read', '#c2410c', 'read', 'Eine Tagesausgabe mit höchstens zwölf Artikeln aus selbst gewählten Quellen, jeder mit einer Kurzfassung. Gespeicherte Links landen in einer durchsuchbaren Bibliothek.', {
-        who: 'Nachrichten und Links',
-        features: ['Berichten mehrere Quellen über dasselbe, wird daraus ein Artikel', 'Kurzfassung in einem Satz und drei Punkten, in der Sprache des Artikels', 'Leseliste für später und Bibliothek nach Themen', 'Suche im Volltext, nach Bedeutung oder als Frage in eigenen Worten', '„Wiederentdecken“ zeigt ältere gespeicherte Links wieder an'],
-        tags: ['Go', 'SQLite FTS5', 'React', 'Embeddings'] }),
       A('zuhause', 'Zuhause', '#0d9488', 'check', 'Die Aufgaben und Routinen der Familie mit Abwechseln, gemeinsamer Einkaufsliste und Erinnerungen per Mail.', {
         who: 'Für die ganze Familie',
         features: ['Schnelleingabe als Satz: „Müll raus jeden Di @Sabine“', 'Rhythmen nach Kalender oder ab der letzten Erledigung, mit Saisons und Pausen', 'Aufgaben im Wechsel oder offen für alle mit „Mach ich“', 'Gemeinsame Einkaufsliste mit „Oft gekauft“', 'Geburtstage mit Vorlauf und Kalender-Abo für das Handy'],
@@ -43,17 +35,33 @@ window.CASTILLO = {
         who: 'Für die ganze Familie',
         features: ['Ferienkonto pro Person und Jahr, Feiertage und Wochenenden zählen nicht', 'Brückentage, auch für beide Eltern gemeinsam', 'Jahreskalender mit Reisen, Feiertagen und Schulferien', 'Jede Reise mit Tagesplan, Packliste, To-dos und Ausgaben', 'Ein Reiseführer für den Zielort, geschrieben von einem Sprachmodell'],
         tags: ['Go', 'SQLite', 'ES-Module', 'SearXNG'] }),
+    ] },
+
+    { id: 'essen', nav: 'Essen', kicker: 'Küche und Bewegung', title: 'Essen und Bewegung',
+      sub: 'Was im Vorrat ist, was gekocht wird und wie viel man sich bewegt.', apps: [
+      A('cook', 'Cook', '#5f9a6e', 'cook', 'Einkaufsliste, Vorräte und Rezepte für die Familie. Was gekocht wird, geht vom Vorrat ab, und was für ein Rezept fehlt, landet auf der Liste.', {
+        who: 'Küche',
+        features: ['Die Einkaufsliste ordnet jeden Artikel einem Ladenbereich zu', 'Vorräte nach Kühlschrank, Schrank und Tiefkühler, mit Haltbarkeit', 'Rezepte rechnen die Zutaten auf die Zahl der Portionen um', 'Ein Foto vom Kühlschrank wird zu einer Liste von Lebensmitteln', 'Vorlieben pro Person fliessen in die Rezeptvorschläge ein'],
+        tags: ['Go', 'SQLite', 'React', 'Vision-Modell'] }),
       A('fit', 'Fit', '#65a30d', 'fit', 'Tagesziele, Mahlzeiten und Gewicht in einer App. XP, Level und Serien belohnen jeden Tag, an dem die Ziele erreicht werden.', {
         who: 'Training und Ernährung',
         features: ['Tages-Check mit drei Ja-Nein-Fragen', 'Mahlzeiten mit einem Tipp aus Vorlagen, mit Kalorien und Protein', 'Gewicht gegen eine Planlinie bis zum Ziel', 'Schritte und Schlaf kommen aus Apple Health', 'Belohnungen, die man sich selbst für Etappenziele setzt'],
         tags: ['Go', 'SQLite', 'React', 'Apple Health'] }),
+    ] },
+
+    { id: 'lesen', nav: 'Lesen', kicker: 'Wissen', title: 'Lesen und Fragen',
+      sub: 'Die Nachrichten des Tages in Kurzfassung und ein KI-Chat für alle in der Familie.', apps: [
+      A('read', 'Read', '#c2410c', 'read', 'Eine Tagesausgabe mit höchstens zwölf Artikeln aus selbst gewählten Quellen, jeder mit einer Kurzfassung. Gespeicherte Links landen in einer durchsuchbaren Bibliothek.', {
+        who: 'Nachrichten und Links',
+        features: ['Berichten mehrere Quellen über dasselbe, wird daraus ein Artikel', 'Kurzfassung in einem Satz und drei Punkten, in der Sprache des Artikels', 'Leseliste für später und Bibliothek nach Themen', 'Suche im Volltext, nach Bedeutung oder als Frage in eigenen Worten', '„Wiederentdecken“ zeigt ältere gespeicherte Links wieder an'],
+        tags: ['Go', 'SQLite FTS5', 'React', 'Embeddings'] }),
       A('chat', 'Chat', '#7c3aed', 'chat', 'Ein KI-Chat für die Familie mit Websuche, Dateianhängen und einem Canvas zum Weiterbearbeiten. Jede Person sieht nur ihre eigenen Unterhaltungen.', {
         who: 'KI-Chat',
         features: ['Antworten laufen auf dem Server weiter, auch wenn das Handy schläft', 'Anhänge als Foto, PDF, Word, PowerPoint oder Code', 'Websuche über die eigene Suchmaschine, Quellen nummeriert', 'Tabellen, Formeln und Diagramme in der Antwort', 'Canvas neben dem Chat zum Bearbeiten und Herunterladen'],
         tags: ['Go', 'Vanilla JS', 'SearXNG'] }),
     ] },
 
-    { id: 'geld', nav: 'Geld & Papier', short: 'Geld', kicker: 'Haushalt', title: 'Geld und Papierkram',
+    { id: 'geld', nav: 'Geld', kicker: 'Haushalt', title: 'Geld und Papierkram',
       sub: 'Kontoauszüge, Belege, Verträge und Steuern. Beide Apps lesen die Unterlagen selbst und fragen nur nach, wenn etwas unklar ist.', apps: [
       A('finance', 'Finance', '#2563eb', 'wallet', 'Das Haushaltsbuch für Konten in mehreren Währungen: Buchungen, Ausgaben, Depot, Steuern und ein Plan bis Ende des nächsten Jahres.', {
         who: 'Haushalt',
@@ -96,8 +104,8 @@ window.CASTILLO = {
         tags: ["Go", "SQLite", "react-three-fiber"] }),
     ] },
 
-    { id: 'werkzeuge', nav: 'Werkzeuge', kicker: 'Für den Betrieb', title: 'Apps für die Plattform',
-      sub: 'Mit diesen Apps wird die Plattform betrieben. Sie liegen im gemeinsamen Upstream und laufen auch auf der befreundeten Plattform.', apps: [
+    { id: 'betrieb', nav: 'Betrieb', kicker: 'Für den Betrieb', title: 'Apps für die Plattform',
+      sub: 'Was läuft und wer was darf. Beide Apps liegen im gemeinsamen Upstream und laufen auch auf der befreundeten Plattform.', apps: [
       A('console', 'Console', '#1d4ed8', 'console', 'Zeigt, was auf dem Server läuft: Apps, Jobs, Updates und die Konfiguration des Hosts. Updates und Konfiguration lassen sich von hier aus anwenden.', {
         who: 'Für die Plattform-Owner',
         features: ['Status aller Apps, Vorfälle und laufende Jobs', 'Der Update-Zug: was automatisch aktualisiert wurde und wo ein Mensch entscheiden muss', 'Alle geplanten Jobs eines Tages auf einer Zeitachse', 'Host-Konfiguration mit Vergleich und Knopf zum Anwenden', 'CI-Läufe mit Pipeline und Logs, Suche mit Ctrl K'],
@@ -106,6 +114,10 @@ window.CASTILLO = {
         who: 'Identität für alle Apps',
         features: ['Rollen: Owner, Familie, Gäste und Kinderprofile ohne eigenes Login', 'Freigaben pro App, auf Wunsch befristet', 'Eine Matrix aller Personen gegen alle Apps', 'Liste aller Adressen, die von aussen erreichbar sind, mit Warnungen', 'Gleicht die Gruppen der Zugangskontrolle selbst ab'],
         tags: ['Go', 'SQLite', 'React', 'Cloudflare Access'] }),
+    ] },
+
+    { id: 'agenten', nav: 'Agenten', kicker: 'Dienste ohne Oberfläche', title: 'Helfer für die Agenten',
+      sub: 'Drei Dienste, über die KI-Agenten und Apps arbeiten: ein gemeinsames Gedächtnis, ein Browser und ein Bot im Chat.', apps: [
       A('memory', 'Memory', '#be185d', 'brain', 'Speichert Vorlieben und Notizen für alle Apps. Jede App liest und schreibt nur ihren eigenen Bereich, geteilt wird nur ausdrücklich.', {
         who: 'Dienst ohne Oberfläche', service: true,
         features: ['Vorlieben zu Essen, Lesen und Personen an einem Ort', 'KI-Agenten lesen und schreiben über MCP, jeder Lauf ist umkehrbar', 'Volltextsuche über die erlaubten Notizen', 'Apps arbeiten weiter, wenn der Dienst kurz fehlt'],

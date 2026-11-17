@@ -718,3 +718,11 @@ table.sr { display: block; position: absolute; width: 1px; height: 1px; overflow
   .bt.apps { grid-template-columns: repeat(7, 34px); }
 }
 @media (max-width: 640px) { .app .tags { display: none; } }
+/* Phones: with 2–3 apps per area the switcher fits as a tab row, icon over name */
+@media (max-width: 640px) {
+  .ex-bar .ex-nav { display: none; }
+  .ex-bar .picker-wrap::after { content: none; }
+  .ex-bar .picker { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 4px; overflow: visible; }
+  .ex-bar .picker button { flex-direction: column; justify-content: center; gap: 5px; padding: 9px 4px 8px; }
+  .ex-bar .picker button b { font-size: 14px; }
+}

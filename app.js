@@ -281,7 +281,7 @@
     return `
     <section class="group${g.games ? ' games' : ''}" id="${esc(g.id)}">
       <div class="wrap">
-        <div class="section-head reveal">${miniCastle(g)}<p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2><span class="mask"><span>${esc(g.title)}</span></span><span class="count">${n}&nbsp;${n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
+        <div class="section-head reveal">${miniCastle(g)}<p class="kicker"><span class="num">${String(gi + 1).padStart(2, '0')}</span> · ${esc(g.kicker)}</p><h2><span class="mask"><span>${esc(g.title)}</span></span><span class="count">${n}&nbsp;${(g.apps || []).every((x) => x.service) && g.apps?.length ? (n === 1 ? 'Dienst' : 'Dienste') : n === 1 ? (g.games ? 'Spiel' : 'App') : g.games ? 'Spiele' : g.tiles ? 'Seiten' : 'Apps'}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : ''}</div>
         ${g.apps?.some((x) => x.views?.length) ? explorer(g.apps.filter((x) => x.views?.length)) : ''}
         ${g.apps?.some((x) => !x.views?.length) ? `<div class="services">${g.apps.filter((x) => !x.views?.length).map(serviceHTML).join('')}</div>` : ''}
         ${g.games?.length ? gamesHTML(g.games) : ''}
