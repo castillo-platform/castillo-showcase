@@ -8,8 +8,17 @@ window.CASTILLO = {
   stats: [
     { n: '20', from: 'apps', label: 'Apps und Spiele', color: '#f2a93b' },
     
-    { n: '36', label: 'Bausteine der Plattform', color: '#4f8df5' },
+    { n: '2382', label: 'Commits in drei Wochen', color: '#4f8df5' },
     { n: '1', label: 'Mini-PC zu Hause', color: '#e8603c' },
+  ],
+  // Recent changes, newest first; each links to its app
+  news: [
+    { date: '17.11.', app: 'read', text: 'Read und Listen sind auf dem iPhone aufgeräumt: Knöpfe, Reihen und Titel passen.' },
+    { date: '17.11.', app: 'console', text: 'Die Kennzahlen der Console passen jetzt auch aufs iPad.' },
+    { date: '16.11.', app: 'omni', text: 'Omni übernimmt Karten für das Mail-Archiv und für Notizen aus dem Upstream.' },
+    { date: '16.11.', app: 'finance', text: 'Finance zeigt Geld, das zwischen eigenen Konten unterwegs ist, als eigene Zeile.' },
+    { date: '15.11.', app: 'paper', text: 'Paper schlägt in der Vertragsübersicht Kündigungsfristen vor.' },
+    { date: '13.11.', app: 'fit', text: 'Fit ging vom ersten Entwurf bis in die Produktion an einem Tag.' },
   ],
   groups: [
     { id: 'alltag', nav: 'Alltag', kicker: 'Für jeden Tag', title: 'Der Familienalltag',
@@ -46,7 +55,7 @@ window.CASTILLO = {
 
     { id: 'geld', nav: 'Geld & Papier', kicker: 'Haushalt', title: 'Geld und Papierkram',
       sub: 'Kontoauszüge, Belege, Verträge und Steuern. Beide Apps lesen die Unterlagen selbst und fragen nur nach, wenn etwas unklar ist.', apps: [
-      A('finance', 'Finance', '#2563eb', 'wallet', 'Das Haushaltsbuch für Konten in Franken und Euro: Buchungen, Ausgaben, Depot, Steuern und ein Plan bis Ende des nächsten Jahres.', {
+      A('finance', 'Finance', '#2563eb', 'wallet', 'Das Haushaltsbuch für Konten in mehreren Währungen: Buchungen, Ausgaben, Depot, Steuern und ein Plan bis Ende des nächsten Jahres.', {
         who: 'Haushalt',
         features: ['Bankdaten kommen täglich per Abruf oder als Datei, jeder Import lässt sich zurücknehmen', 'Ausgaben nach Kategorie, mit Vorjahresvergleich', 'Depot mit Rendite, Ausschüttungen und dem Inhalt jedes ETF', 'Steuerjahr mit Prognose und Vorschlägen aus Online-Bestellungen', 'Was-wäre-wenn-Rechnung bis Ende des nächsten Jahres', 'Abos werden an ihrem Rhythmus erkannt'],
         tags: ['Go', 'SQLite', 'React', 'ECharts'] }),
@@ -105,7 +114,7 @@ window.CASTILLO = {
         who: 'Werkzeug für Agenten', service: true,
         features: ['Gehärtet gegen Bot-Erkennung', 'Erreichbar über den gemeinsamen MCP-Endpunkt', 'Nur mit Anmeldung und nur für freigegebene Werkzeuge'],
         tags: ['Python', 'Camoufox', 'MCP'] }),
-      A('bot', 'Plattform-Bot', '#e8603c', 'bot', 'Arbeitet im Gruppenchat und auf GitHub mit. Er beantwortet Fragen zu Code und Checks, legt Entscheide als Pull Request an. Mergen darf er nicht.', {
+      A('bot', 'Plattform-Bot', '#e8603c', 'bot', 'Arbeitet im Gruppenchat und auf GitHub mit. Er beantwortet Fragen zu Code und Checks und legt Entscheide als Pull Request an. Mergen darf er nicht.', {
         who: 'Im Chat und auf GitHub', service: true,
         features: ['Liest Code, Issues, Pull Requests und Checks', 'Schlägt Änderungen als Entwurf vor', 'Übergibt Releases, Deploys und Rollbacks an die CI', 'Hat er fremde Inhalte gelesen, braucht jede weitere Aktion eine Bestätigung'],
         tags: ['Go', 'SQLite', 'Telegram', 'GitHub'] }),

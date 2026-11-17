@@ -9,7 +9,7 @@ window.CASTILLO_PLATFORM = {
       { n: '0', label: 'offene Ports', color: '#e8603c' },
       { n: '1', label: 'Knoten, 6 Kerne, 24 GB', color: '#f2a93b' },
       { n: '36', label: 'Bausteine der Plattform', color: '#4f8df5' },
-      { n: '0', label: 'GitHub Actions', color: '#2fb380' },
+      { n: '22', label: 'Repos an der eigenen CI', color: '#2fb380' },
       { n: '2', label: 'Backups: täglich, wöchentlich', color: '#22a6b3' },
       { n: '15', label: 'geteilte UI-Module', color: '#9b7bea' },
     ],
@@ -18,7 +18,7 @@ window.CASTILLO_PLATFORM = {
     nodes: [
       { id: 'family', x: 20, y: 40, t: 'Familie', s: 'Handy + iPad', i: 'phone', c: '#f2a93b' },
       { id: 'ai', x: 20, y: 160, t: 'KI-Assistent', s: 'als MCP-Client', i: 'sparkle', c: '#5b6cf0' },
-      { id: 'dev', x: 20, y: 330, t: 'Owner + Agenten', s: 'Claude Code', i: 'bot', c: '#2fb380' },
+      { id: 'dev', x: 20, y: 330, t: 'Agenten', s: 'Owner + Claude Code', i: 'bot', c: '#2fb380' },
       { id: 'cf', x: 280, y: 95, t: 'Cloudflare', s: 'Tunnel + Login', i: 'shield', c: '#9b7bea' },
       { id: 'gh', x: 280, y: 330, t: 'GitHub', s: 'Code + Releases', i: 'git', c: '#1d2433' },
       { id: 'traefik', x: 565, y: 60, t: 'Traefik', s: 'Eingang', i: 'door', c: '#4f8df5', home: true },
@@ -31,8 +31,8 @@ window.CASTILLO_PLATFORM = {
       { id: 'flux', x: 1025, y: 300, t: 'Flux', s: 'GitOps', i: 'refresh', c: '#2fb380', home: true },
       { id: 'eso', x: 795, y: 420, t: 'Secrets', s: 'External Secrets', i: 'key', c: '#d4a017', home: true },
       { id: 'ops', x: 1025, y: 420, t: 'Betrieb', s: 'Backup + Logs', i: 'chart', c: '#22a6b3', home: true },
-      { id: 'models', x: 1250, y: 180, t: 'Modelle', s: 'in der Cloud', i: 'cloud', c: '#5b6cf0', cloud: true },
-      { id: 'backup', x: 1250, y: 420, t: 'Grafana + S3', s: 'Logs, Backups', i: 'cloud', c: '#22a6b3', cloud: true },
+      { id: 'models', x: 1275, y: 180, t: 'Modelle', s: 'in der Cloud', i: 'cloud', c: '#5b6cf0', cloud: true },
+      { id: 'backup', x: 1275, y: 420, t: 'Grafana + S3', s: 'Logs, Backups', i: 'cloud', c: '#22a6b3', cloud: true },
       { id: 'akeyless', x: 795, y: 556, t: 'Akeyless', s: 'Secret-Quelle', i: 'lock', c: '#d4a017', cloud: true },
     ],
     edges: [
@@ -43,16 +43,16 @@ window.CASTILLO_PLATFORM = {
     ],
     // Hand-laid routes through the gaps between the columns, so no line crosses a box
     routes: {
-      'eso>apps': 'M795 457H782Q770 457 770 445V122Q770 97 782 97H795',
-      'flux>apps': 'M1025 337H1012Q992 337 992 317V125Q992 112 980 112H975',
-      'apps>ops': 'M975 82H995Q1008 82 1008 95V440Q1008 457 1016 457H1025',
-      'mcp>apps': 'M745 217H755Q762 217 762 205V128Q762 118 772 118H795',
+      'eso>apps': 'M795 459H786Q778 459 778 447V111Q778 99 786 99H795',
+      'flux>apps': 'M1025 339H1014Q1001 339 1001 326V128Q1001 116 994 116H991',
+      'apps>ops': 'M991 84H1004Q1015 84 1015 96V446Q1015 459 1020 459H1025',
+      'mcp>apps': 'M761 219H770Q778 219 778 207V126Q778 118 786 118H795',
     },
     flows: [
       { id: 'request', t: 'Aufruf einer App', i: 'phone', c: '#f2a93b', path: [['family', 'cf'], ['cf', 'traefik'], ['traefik', 'apps'], ['apps', 'dir']], text: 'Die Anmeldung prüft Cloudflare, der Tunnel bringt die Anfrage nach Hause, die App fragt Directory, wer das ist.' },
       { id: 'deploy', t: 'Neue Version', i: 'rocket', c: '#e8603c', path: [['dev', 'gh'], ['gh', 'ci'], ['ci', 'zot'], ['zot', 'flux'], ['flux', 'apps']], text: 'Ein Push startet die eigene CI. Sie baut, prüft, erstellt ein Release, und Flux rollt es aus.' },
       { id: 'ai', t: 'KI-Assistent', i: 'sparkle', c: '#5b6cf0', path: [['ai', 'cf'], ['cf', 'mcp'], ['mcp', 'apps'], ['apps', 'llm'], ['llm', 'models']], text: 'Ein Assistent nutzt die Werkzeuge der Apps über einen MCP-Endpunkt; Apps erreichen Modelle nur über das Gateway.' },
-      { id: 'safe', t: 'Secrets & Backup', i: 'key', c: '#22a6b3', path: [['akeyless', 'eso'], ['eso', 'apps'], ['apps', 'ops'], ['ops', 'backup']], text: 'Secrets kommen nur aus Akeyless. Logs und Backups gehen täglich in die Cloud.' },
+      { id: 'safe', t: 'Secrets & Backup', i: 'key', c: '#22a6b3', path: [['akeyless', 'eso'], ['eso', 'apps'], ['apps', 'ops'], ['ops', 'backup']], text: 'Secrets kommen nur aus Akeyless. Logs gehen laufend in die Cloud, Backups täglich und wöchentlich.' },
     ],
 
     // Delivery as a conveyor
@@ -86,16 +86,16 @@ window.CASTILLO_PLATFORM = {
     loop: [
       { t: 'Owner', s: 'Aufgabe, oft vom Handy', i: 'user', c: '#f2a93b' },
       { t: 'Agenten', s: 'Claude Code', i: 'bot', c: '#2fb380' },
-      { t: 'Skills + Brain', s: '16 Skills, 18 Seiten', i: 'book', c: '#5b6cf0' },
+      { t: 'Skills + Brain', s: '16 Skills, 19 Seiten', i: 'book', c: '#5b6cf0' },
       { t: 'Pull Request', s: 'mit Check', i: 'git', c: '#1d2433' },
-      { t: 'CI + Release', s: 'ohne GitHub Actions', i: 'cog', c: '#e8603c' },
+      { t: 'CI + Release', s: 'im eigenen Cluster', i: 'cog', c: '#e8603c' },
       { t: 'Produktion', s: 'Rollout oder Rollback', i: 'rocket', c: '#4f8df5' },
       { t: 'Bot im Chat', s: 'meldet, merged nie', i: 'chat', c: '#e0477c' },
     ],
     cards: [
       { big: '16', title: 'Skills', color: '#5b6cf0' },
-      { big: '18', title: 'Seiten im Brain', color: '#2fb380' },
-      { big: '2’382', title: 'Commits in drei Wochen', color: '#e0477c' },
+      { big: '19', title: 'Seiten im Brain', color: '#2fb380' },
+      { big: '2382', title: 'Commits in drei Wochen', color: '#e0477c' },
       { big: '2', title: 'Plattformen, ein Upstream', color: '#f2a93b' },
     ],
     // Commits per day over every repo of both organisations, each commit counted once (git log, 2026-11-17).
@@ -106,8 +106,8 @@ window.CASTILLO_PLATFORM = {
       { date: '01.11.2026', short: 'Erstes 3D-Spiel', i: 'car', text: 'Das erste 3D-Spiel für die Kinder.' },
       { date: '07.11.2026', short: 'Familien-Apps', i: 'check', text: 'Weitere Familien-Apps: Spiele, To-dos, Ferienplanung.' },
       { date: '11.11.2026', short: 'Das Brain', i: 'book', text: 'Ein Wissensspeicher in Git, aus dem die Agenten zu jeder Aufgabe die passenden Seiten erhalten.' },
-      { date: '12.11.2026', short: 'Eigene CI, Bot live', i: 'rocket', text: 'Keine GitHub Actions mehr: Prüfen und Ausliefern übernimmt die eigene CI. Der Plattform-Bot geht live.' },
-      { date: '13.11.2026', short: 'App an einem Tag', i: 'sparkle', text: 'Eine neue App geht vom Scaffold bis in die Produktion am selben Tag.' },
+      { date: '12.11.2026', short: 'Eigene CI, Bot live', i: 'rocket', text: 'Prüfen und Ausliefern übernimmt die eigene CI statt GitHub Actions. Der Plattform-Bot geht live.' },
+      { date: '13.11.2026', short: 'App an einem Tag', i: 'sparkle', text: 'Eine neue App geht am selben Tag vom ersten Entwurf bis in die Produktion.' },
       { date: '14.11.2026', short: 'Brain lernt selbst', i: 'brain', text: 'Das Brain schreibt selbst nach, was eine Session gelernt hat, und räumt jede Nacht auf.' },
     ],
   },

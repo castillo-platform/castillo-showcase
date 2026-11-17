@@ -83,6 +83,11 @@
 
   const apps = D.groups.flatMap((g) => [...(g.apps || []), ...(g.games || []), ...(g.tiles || [])].map((a) => ({ ...a, group: g.id })));
 
+  // New on Castillo: dated cards, newest first, each opens its app
+  const byId = Object.fromEntries(apps.map((a) => [a.id, a]));
+  $('#neu').innerHTML = `<div class="news-head"><b>Neu auf Castillo</b><span>die letzten Änderungen</span></div>
+    <div class="news-row">${(D.news || []).filter((n) => byId[n.app]).map((n, k) => { const a = byId[n.app]; return `<a class="news-card" href="#${esc(a.id)}" style="--c:${a.color};--k:${k}"><span class="nc-top"><i>${icon(a.icon)}</i><b>${esc(a.name)}</b><time>${esc(n.date)}</time></span><span class="nc-text">${esc(n.text)}</span></a>`; }).join('')}</div>`;
+
   // Marquee: every app as a chip, twice so the loop is seamless
   const chip = (a) => `<a href="#${esc(a.id)}" tabindex="-1" style="--c:${a.color}"><i>${icon(a.icon)}</i>${esc(a.name)}</a>`;
   $('#marquee').innerHTML = apps.map(chip).join('') + apps.map(chip).join('');
@@ -164,7 +169,7 @@
   castle.addEventListener('click', (e) => { const t = e.target.closest('.tw'); if (t) goTo(t.dataset.id); });
 
   // Parallax: the sky layers drift at different speeds while the hero is on screen
-  const layers = [['.clouds', 0.35], ['.sunball', 0.28], ['.hills.far', 0.18], ['.hills.near', 0.1], ['.hero-text', 0.28]].map(([q, k]) => [$(q), k]);
+  const layers = [['.clouds', 0.35], ['.sunball', 0.28], ['.hills.far', 0.18], ['.hills.near', 0.1]].map(([q, k]) => [$(q), k]);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let ticking = false;
   addEventListener('scroll', () => {
@@ -173,7 +178,6 @@
     requestAnimationFrame(() => {
       const y = Math.min(scrollY, innerHeight * 1.2);
       layers.forEach(([el, k]) => { el.style.transform = `translate3d(0, ${(y * k).toFixed(1)}px, 0)`; });
-      $('.hero-text').style.opacity = String(Math.max(0, 1 - y / (innerHeight * 0.7)));
       ticking = false;
     });
   }, { passive: true });
@@ -186,7 +190,7 @@
     const V = a.views;
     const layer = (kind) => V.map((v, k) => {
       if (!v[kind]) return '';
-      const i = gallery.push({ src: v[kind], cap: `${a.name} – ${v.title}: ${v.text}` }) - 1;
+      const i = gallery.push({ src: v[kind], cap: `${a.name}, ${v.title}: ${v.text}` }) - 1;
       const first = V.findIndex((x) => x[kind]);
       // only the first view loads with the page; the others get their src when they are next
       return `<img ${k === first ? 'src' : 'data-src'}="${esc(v[kind])}" alt="${esc(`${a.name}, ${v.title}`)}" data-i="${i}" data-v="${k}" class="${k === first ? 'on' : ''}" loading="lazy" decoding="async">`;
@@ -211,7 +215,7 @@
       <div class="app-text">
         <div class="app-head"><span class="icon">${icon(a.icon)}</span><div><h3>${esc(a.name)}</h3><div class="who">${esc(a.who || '')}</div></div></div>
         <p class="pitch">${esc(a.pitch)}</p>
-        <ul class="feats">${(a.features || []).map((f, k) => `<li style="--k:${k}">${esc(f)}</li>`).join('')}</ul>
+        <ul class="feats">${(a.features || []).slice(0, 4).map((f, k) => `<li style="--k:${k}">${esc(f)}</li>`).join('')}</ul>
         <div class="tags">${(a.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div>
       </div>
       ${views3(a)}
@@ -221,7 +225,7 @@
       <div class="explorer reveal">
         ${list.length > 1 ? `
         <div class="ex-bar">
-          <p class="ex-label"><b>${list.length} Apps</b> in diesem Bereich · zum Wechseln antippen</p>
+          <p class="ex-label"><b>${list.length} Apps</b> in diesem Bereich · zum Umschalten antippen</p>
           <div class="ex-nav"><button type="button" class="ex-step" data-step="-1" aria-label="Vorherige App"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ex-count">1 / ${list.length}</span><button type="button" class="ex-step" data-step="1" aria-label="Nächste App"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
         </div>
         <div class="picker-wrap"><div class="picker" role="tablist" aria-label="Apps">${list.map((a, k) => `<button type="button" role="tab" data-app="${esc(a.id)}" class="${k ? '' : 'on'}" aria-selected="${!k}" style="--c:${a.color}"><i>${icon(a.icon)}</i><span><b>${esc(a.name)}</b><small>${esc(a.who || '')}</small></span></button>`).join('')}</div></div>` : ''}
@@ -287,7 +291,7 @@
 
   // Architecture
   const N = Object.fromEntries(P.nodes.map((n) => [n.id, n]));
-  const NW = 180, NH = 74;
+  const NW = 196, NH = 78;
   const mid = (n) => [n.x + NW / 2, n.y + NH / 2];
   const edgePath = ([a, b]) => {
     if (P.routes?.[`${a}>${b}`]) return P.routes[`${a}>${b}`];
@@ -304,19 +308,19 @@
   const nodeSvg = (n) => `
     <g class="anode${n.home ? ' home' : ''}${n.cloud ? ' cloud' : ''}" data-id="${n.id}" style="--c:${n.c}">
       <rect x="${n.x}" y="${n.y}" width="${NW}" height="${NH}" rx="16"/>
-      <rect class="ic" x="${n.x + 14}" y="${n.y + 17}" width="40" height="40" rx="11"/>
-      <svg x="${n.x + 23}" y="${n.y + 26}" width="22" height="22" viewBox="0 0 24 24" class="ig">${ICONS[n.i] || ICONS.sparkle}</svg>
-      <text x="${n.x + 66}" y="${n.y + 33}" class="nt">${esc(n.t)}</text>
-      <text x="${n.x + 66}" y="${n.y + 53}" class="ns">${esc(n.s)}</text>
+      <rect class="ic" x="${n.x + 14}" y="${n.y + 19}" width="40" height="40" rx="11"/>
+      <svg x="${n.x + 23}" y="${n.y + 28}" width="22" height="22" viewBox="0 0 24 24" class="ig">${ICONS[n.i] || ICONS.sparkle}</svg>
+      <text x="${n.x + 66}" y="${n.y + 35}" class="nt">${esc(n.t)}</text>
+      <text x="${n.x + 66}" y="${n.y + 57}" class="ns">${esc(n.s)}</text>
     </g>`;
-  const flowBtns = P.flows.map((f, k) => `<button type="button" class="flow-btn${k ? '' : ' on'}" data-flow="${f.id}" style="--c:${f.c}"><i>${icon(f.i)}</i>${esc(f.t)}<span class="fbar"></span></button>`).join('');
+  const flowBtns = P.flows.map((f, k) => `<button type="button" role="tab" aria-selected="${!k}" class="flow-btn${k ? '' : ' on'}" data-flow="${f.id}" style="--c:${f.c}"><i>${icon(f.i)}</i>${esc(f.t)}<span class="fbar"></span></button>`).join('');
   $('#arch').innerHTML = `
-    <div class="viz-head"><h3>Architektur</h3><p>Ablauf wählen, der Weg leuchtet auf</p></div>
-    <div class="flows" role="tablist">${flowBtns}</div>
+    <span class="abb">Abb. 1</span><div class="viz-head"><h3>Architektur</h3><p>Ablauf wählen, der Weg leuchtet auf</p></div>
+    <div class="flows" role="tablist" aria-label="Abläufe">${flowBtns}</div>
     <div class="board">
-      <svg viewBox="0 0 1450 650" role="img" aria-label="Architektur von Castillo">
+      <svg viewBox="0 0 1480 660" role="img" aria-label="Architektur von Castillo">
         <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="context-stroke"/></marker></defs>
-        <rect class="homebox" x="545" y="20" width="685" height="510" rx="26"/>
+        <rect class="homebox" x="545" y="20" width="705" height="512" rx="26"/>
         <text x="566" y="46" class="hb">HEIMSERVER · K3S</text>
         ${P.edges.map((e) => `<path class="aedge" data-e="${ek(e)}" d="${edgePath(e)}" marker-end="url(#ah)"/>`).join('')}
         <g class="pkts"></g>
@@ -324,7 +328,7 @@
       </svg>
     </div>
     <div class="flow-steps">${P.flows.map((f, k) => { const seq = [f.path[0][0], ...f.path.map((e) => e[1])]; return `<ol class="${k ? '' : 'on'}" data-flow="${f.id}" style="--c:${f.c}">${seq.map((id, j) => `<li style="--j:${j}"><i style="--nc:${N[id].c}">${icon(N[id].i)}</i><b>${esc(N[id].t)}</b><span>${esc(N[id].s)}</span></li>`).join('')}</ol>`; }).join('')}</div>
-    <div class="flow-caption">${P.flows.map((f, k) => `<p class="${k ? '' : 'on'}" data-flow="${f.id}">${esc(f.text)}</p>`).join('')}</div>`;
+    <div class="flow-caption" aria-live="polite">${P.flows.map((f, k) => `<p class="${k ? '' : 'on'}" data-flow="${f.id}">${esc(f.text)}</p>`).join('')}</div>`;
   {
     const board = $('#arch'), svg = $('#arch .board svg'), pk = $('#arch .pkts');
     let fi = 0, ftimer = 0, fheld = false, fseen = false;
@@ -333,7 +337,7 @@
       const f = P.flows[fi];
       const on = new Set(f.path.map(ek)), nodes = new Set(f.path.flat());
       board.style.setProperty('--fc', f.c);
-      board.querySelectorAll('.flow-btn').forEach((b, j) => b.classList.toggle('on', j === fi));
+      board.querySelectorAll('.flow-btn').forEach((b, j) => { b.classList.toggle('on', j === fi); b.setAttribute('aria-selected', String(j === fi)); });
       board.querySelectorAll('.flow-caption p, .flow-steps ol').forEach((p) => p.classList.toggle('on', p.dataset.flow === f.id));
       svg.querySelectorAll('.aedge').forEach((e) => e.classList.toggle('on', on.has(e.dataset.e)));
       svg.querySelectorAll('.anode').forEach((n) => { n.classList.toggle('on', nodes.has(n.dataset.id)); n.classList.toggle('off', !nodes.has(n.dataset.id)); });
@@ -349,16 +353,16 @@
 
   // Delivery conveyor
   $('#pipeline').innerHTML = `
-    <div class="viz-head"><h3>Von Push bis Produktion</h3><p>ohne GitHub Actions, alles im eigenen Cluster</p></div>
+    <span class="abb">Abb. 2</span><div class="viz-head"><h3>Von Push bis Produktion</h3><p>in der eigenen CI im Cluster</p></div>
     <div class="conveyor">
-      <div class="belt"><span class="token"></span></div>
+      <div class="belt"><span class="token">v1.42.0</span></div>
       ${P.pipeline.map((st, k) => `<div class="stage" style="--k:${k}"><i>${icon(st.i)}</i><b>${esc(st.t)}</b><span>${esc(st.s)}</span><em>${icon('check')}</em></div>`).join('')}
     </div>`;
 
   // Stack, built from the ground up; the cloud services beside it
   const appIcons = D.groups.flatMap((g) => [...(g.apps || []), ...(g.games || [])]).map((a) => `<span class="ai" style="--c:${a.color}" title="${esc(a.name)}">${icon(a.icon)}</span>`).join('');
   $('#stack').innerHTML = `
-    <div class="viz-head"><h3>Der Stapel</h3><p>vom Mini-PC bis zur App, daneben was aus der Cloud kommt</p></div>
+    <span class="abb">Abb. 3</span><div class="viz-head"><h3>Der Stapel</h3><p>vom Mini-PC bis zur App, daneben was aus der Cloud kommt</p></div>
     <div class="stack-grid">
       <div class="stack">${[...P.stack].reverse().map((l, k, arr) => `
         <div class="band" style="--c:${l.c};--k:${arr.length - 1 - k}">
@@ -387,7 +391,8 @@
         </svg>
         ${L.map((n, k) => { const [x, y] = pos(k); return `<div class="lnode" style="--c:${n.c};--x:${(x / 6).toFixed(2)}%;--y:${(y / 5.4).toFixed(2)}%;--d:${(k / L.length * dur).toFixed(2)}s;--dur:${dur}s"><i>${icon(n.i)}</i><b>${esc(n.t)}</b><span>${esc(n.s)}</span></div>`; }).join('')}
       </div>
-      <div class="loop-figs">${H.cards.map((c, k) => `<div class="fig reveal" style="--c:${c.color};--k:${k}"><b>${esc(c.big)}</b><span>${esc(c.title)}</span></div>`).join('')}</div>`;
+      <div class="loop-figs">${H.cards.map((c, k) => `<div class="fig reveal" style="--c:${c.color};--k:${k}"><b data-n="${esc(c.big)}">${esc(c.big)}</b><span>${esc(c.title)}</span></div>`).join('')}</div>`;
+    document.querySelectorAll('.loop-figs .fig').forEach((el) => counted.observe(el));
   }
 
   // Commits per day: one bar a day, milestone days in amber with a dot, bars grow when seen
@@ -495,6 +500,15 @@
 
   // Explorer: a tab shows its app; arrows move between apps
   const showApp = (ex, id) => {
+    if (document.startViewTransition && !still && !ex.dataset.vt) {
+      ex.dataset.vt = '1';
+      const t = document.startViewTransition(() => swapApp(ex, id));
+      t.finished.finally(() => { delete ex.dataset.vt; });
+      return;
+    }
+    swapApp(ex, id);
+  };
+  const swapApp = (ex, id) => {
     ex.querySelectorAll('.picker button').forEach((b) => { const on = b.dataset.app === id; b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on) b.parentElement.scrollTo({ left: b.offsetLeft - 20, behavior: still ? 'auto' : 'smooth' }); });
     ex.querySelectorAll('.panels > .app').forEach((a) => { const on = a.id === id; if (on === a.classList.contains('on')) return; a.classList.toggle('on', on); if (on) a.dispatchEvent(new Event('shown')); });
     syncNav(ex);
@@ -553,7 +567,10 @@
   // Phone menu: the section list opens under the bar
   const menuBtn = $('.menu-btn');
   menuBtn.addEventListener('click', () => { const open = !top.classList.contains('open'); top.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); });
-  $('#nav').addEventListener('click', () => { top.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); });
+  const closeMenu = () => { top.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); };
+  $('#nav').addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && top.classList.contains('open')) { closeMenu(); menuBtn.focus(); } });
+  document.addEventListener('pointerdown', (e) => { if (top.classList.contains('open') && !top.contains(e.target)) closeMenu(); });
 
   // Scroll effects in one frame: progress bar, the devices drifting apart in depth
   const bar = $('.progress');
@@ -583,12 +600,10 @@
     requestAnimationFrame(place);
   });
 
-  // The hero button leans towards the pointer
-  const cta = $('.cta');
-  if (cta && !still && matchMedia('(pointer: fine)').matches) {
-    cta.addEventListener('pointermove', (e) => { const r = cta.getBoundingClientRect(); cta.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * 0.25).toFixed(1)}px, ${((e.clientY - r.top - r.height / 2) * 0.35).toFixed(1)}px)`; });
-    cta.addEventListener('pointerleave', () => { cta.style.transform = ''; });
-  }
+
+  // Every counting figure starts out formatted (2'382), also when it never animates
+  const fmtAll = new Intl.NumberFormat('de-CH');
+  document.querySelectorAll('[data-n]').forEach((el) => { const n = Number(el.dataset.n); if (Number.isFinite(n)) el.textContent = fmtAll.format(n); });
 
   // Lightbox
   const box = $('#lightbox');

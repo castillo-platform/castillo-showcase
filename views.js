@@ -10,7 +10,7 @@ window.CASTILLO_VIEWS = {
   },
   {
    "title": "Vermögen",
-   "text": "Teilt das Vermögen in Immobilie, Wertpapiere, Konten, Festgeld und Kredite auf und zeigt die Entwicklung Quartal für Quartal seit 2023.",
+   "text": "Teilt das Vermögen nach Anlageart auf und zeigt die Entwicklung Quartal für Quartal seit 2023.",
    "desktop": "shots/finance-wealth-desktop.webp",
    "tablet": "shots/finance-wealth-tablet.webp",
    "phone": "shots/finance-wealth-phone.webp"
@@ -40,7 +40,7 @@ window.CASTILLO_VIEWS = {
   },
   {
    "title": "Ablage",
-   "text": "Ordnet alle Papiere nach Person und Bereich und findet sie über Suchen wie «Rechnungen über 100 dieses Jahr».",
+   "text": "Ordnet alle Papiere nach Person und Bereich und findet sie über Suchen wie „Rechnungen über 100 dieses Jahr“.",
    "desktop": "shots/paper-documents-desktop.webp",
    "tablet": "shots/paper-documents-tablet.webp",
    "phone": "shots/paper-documents-phone.webp"
@@ -97,8 +97,8 @@ window.CASTILLO_VIEWS = {
    "phone": "shots/directory-matrix-phone.webp"
   },
   {
-   "title": "Exposition",
-   "text": "Prüft alle von aussen erreichbaren Adressen und nennt jene ohne Login mit Hoch, Mittel oder Tief.",
+   "title": "Von aussen erreichbar",
+   "text": "Prüft alle von aussen erreichbaren Adressen und stuft jene ohne Login als hoch, mittel oder tief ein.",
    "desktop": "shots/directory-exposure-desktop.webp",
    "tablet": "shots/directory-exposure-tablet.webp",
    "phone": "shots/directory-exposure-phone.webp"
@@ -279,7 +279,7 @@ window.CASTILLO_VIEWS = {
  "fit": [
   {
    "title": "Tagesansicht",
-   "text": "Zeigt Level, Serie und die Schritte bis zum Tagesziel, darunter den Tages-Check mit drei Ja-Nein-Fragen zu Mittagessen, Knabbern und Alkohol.",
+   "text": "Zeigt Level, Serie, die Schritte bis zum Tagesziel und den Tages-Check mit drei Ja-Nein-Fragen.",
    "desktop": "shots/fit-heute-desktop.webp",
    "tablet": "shots/fit-heute-tablet.webp",
    "phone": "shots/fit-heute-phone.webp"
@@ -293,7 +293,7 @@ window.CASTILLO_VIEWS = {
   },
   {
    "title": "Gewichtskurve",
-   "text": "Vergleicht das gemessene Gewicht mit der Planlinie von 93 auf 84 kg bis zum 9. Februar.",
+   "text": "Vergleicht das gemessene Gewicht mit einer Planlinie bis zum Zieldatum.",
    "desktop": "shots/fit-fortschritt-desktop.webp",
    "tablet": "shots/fit-fortschritt-tablet.webp",
    "phone": "shots/fit-fortschritt-phone.webp"
@@ -375,7 +375,7 @@ window.CASTILLO_VIEWS = {
   },
   {
    "title": "Waschanlage",
-   "text": "Schäumen, bürsten, spritzen, föhnen, polieren: der Schlamm geht dort weg, wo der Finger reibt.",
+   "text": "Schäumen, bürsten, spritzen, föhnen, polieren: Der Schlamm geht dort weg, wo der Finger reibt.",
    "desktop": "shots/garage-wash-desktop.webp",
    "tablet": "shots/garage-wash-tablet.webp",
    "phone": "shots/garage-wash-phone.webp"
